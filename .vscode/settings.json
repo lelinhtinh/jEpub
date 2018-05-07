@@ -1,7 +1,8 @@
 {
   "search.exclude": {
     "**/node_modules": true,
-    "**/epub-sample": true
+    "**/epub-sample": true,
+    "**/dist": true
   },
   "files.exclude": {
     "**/node_modules": true
