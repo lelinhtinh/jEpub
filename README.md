@@ -72,7 +72,7 @@ Tạo epub dựa trên mẫu từ [Pressbooks](pressbooks.com) vì nó hoạt đ
 
 ### Tạo UUID
 
-https://stackoverflow.com/a/2117523
+[https://stackoverflow.com/a/2117523](https://stackoverflow.com/a/2117523)
 
 ```js
 function uuidv4() {
@@ -93,7 +93,7 @@ function uuidv4() {
 
 ### Thử nghiệm
 
-https://jsfiddle.net/baivong/rhov44gg/
+[https://jsfiddle.net/baivong/rhov44gg/](https://jsfiddle.net/baivong/rhov44gg/)
 
 ### VSCode
 
