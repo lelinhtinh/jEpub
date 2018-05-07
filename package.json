@@ -2,8 +2,14 @@
   "name": "jepub",
   "version": "1.0.0",
   "description": "Generate simple EPUB books with JavaScript.",
-  "main": "src/jepub.js",
+  "main": "dist/jepub.js",
   "scripts": {
+    "clean": "rimraf dist",
+    "postclean": "mkdirp dist",
+    "prebuild": "npm run clean",
+    "build": "webpack --config webpack.production.config.js",
+    "prestart": "npm run clean",
+    "start": "webpack --config webpack.development.config.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -19,6 +25,11 @@
   ],
   "author": "lelinhtinh",
   "license": "ISC",
+  "files": [
+    "demo/",
+    "dist/",
+    "src/"
+  ],
   "bugs": {
     "url": "https://github.com/lelinhtinh/jEpub/issues"
   },
@@ -26,5 +37,11 @@
   "dependencies": {
     "ejs": "^2.6.1",
     "jszip": "^3.1.5"
+  },
+  "devDependencies": {
+    "mkdirp": "^0.5.1",
+    "rimraf": "^2.6.2",
+    "webpack": "^4.8.0",
+    "webpack-cli": "^2.1.3"
   }
 }

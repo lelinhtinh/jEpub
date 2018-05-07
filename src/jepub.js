@@ -1,7 +1,7 @@
 'use strict';
 
-import '../node_modules/jszip/dist/jszip.js';
-import '../node_modules/ejs/ejs.js';
+import JSZip from 'jszip';
+import ejs from 'ejs';
 
 console.log(JSZip);
 console.log(ejs);
