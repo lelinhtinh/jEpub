@@ -1,0 +1,30 @@
+{
+  "name": "jepub",
+  "version": "1.0.0",
+  "description": "Generate simple EPUB books with JavaScript.",
+  "main": "src/jepub.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lelinhtinh/jEpub.git"
+  },
+  "keywords": [
+    "generator",
+    "epub",
+    "javascript",
+    "browser",
+    "library"
+  ],
+  "author": "lelinhtinh",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lelinhtinh/jEpub/issues"
+  },
+  "homepage": "https://github.com/lelinhtinh/jEpub#readme",
+  "dependencies": {
+    "ejs": "^2.6.1",
+    "jszip": "^3.1.5"
+  }
+}
