@@ -5,8 +5,8 @@ Tạo epub dựa trên mẫu từ [Pressbooks](pressbooks.com) vì nó hoạt đ
 ## Todo
 
 - [x] Tạo epub mẫu.
-- [ ] Cấu hình editor.
-- [ ] Dựng template.
+- [x] Cấu hình editor.
+- [x] Dựng template.
 - [ ] Hoàn tất API.
 - [ ] Tạo ảnh bìa từ tiêu đề.
 - [ ] Dùng Webpack để dựng thư viện.
@@ -17,6 +17,7 @@ Tạo epub dựa trên mẫu từ [Pressbooks](pressbooks.com) vì nó hoạt đ
 
 - [ ] `uuid`: Mã định danh.
 - [ ] `info`: Tên truyện, tác giả, giới thiệu, nguồn truyện.
+- [ ] `copyright`: Ghi công.
 - [ ] `cover`: Dữ liệu ảnh bìa dạng `arraybuffer` object.
 - [ ] `add`: Thêm chương.
 - [ ] `blob`: Xuất `Blob` object khi hoàn tất.
