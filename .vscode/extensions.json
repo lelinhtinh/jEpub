@@ -1,15 +1,16 @@
 {
-	"recommendations": [
-		"xabikos.javascriptsnippets",
-		"HookyQR.beautify",
-		"dbaeumer.vscode-eslint",
-		"huizhou.githd",
-		"codezombiech.gitignore",
-		"yzhang.markdown-all-in-one",
-		"DavidAnson.vscode-markdownlint",
-		"DotJoshJohnson.xml",
-		"formulahendry.auto-close-tag",
-        "formulahendry.auto-rename-tag",
-        "EditorConfig.editorconfig"
-	]
+  "recommendations": [
+    "xabikos.javascriptsnippets",
+    "HookyQR.beautify",
+    "dbaeumer.vscode-eslint",
+    "huizhou.githd",
+    "codezombiech.gitignore",
+    "yzhang.markdown-all-in-one",
+    "DavidAnson.vscode-markdownlint",
+    "DotJoshJohnson.xml",
+    "formulahendry.auto-close-tag",
+    "formulahendry.auto-rename-tag",
+    "EditorConfig.editorconfig",
+    "DigitalBrainstem.javascript-ejs-support"
+  ]
 }
