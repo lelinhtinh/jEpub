@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<package version="2.0" xmlns="http://www.idpf.org/2007/opf" unique-identifier="PrimaryID">
+
+	<metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">
+		<dc:title><%= title %></dc:title>
+		<dc:language>vi</dc:language>
+		<dc:identifier id="PrimaryID" opf:scheme="URI"><%= uuid %></dc:identifier>
+        <% if (description) { %>
+		    <dc:description><%= description %></dc:description>
+        <% } %>
+		<dc:creator opf:role="aut"><%= author %></dc:creator>
+		<dc:publisher><%= publisher %></dc:publisher>
+		<meta name="cover" content="cover-image" />
+	</metadata>
+
+	<manifest>
+		<item id="front-cover" href="OEBPS/front-cover.html" media-type="application/xhtml+xml" />
+		<item id="title-page" href="OEBPS/title-page.html" media-type="application/xhtml+xml" />
+		<item id="copyright" href="OEBPS/copyright.html" media-type="application/xhtml+xml" />
+		<item id="table-of-contents" href="OEBPS/table-of-contents.html" media-type="application/xhtml+xml" />
+        <% toc.forEach(function(title, index){ %>
+            <item id="page-<%= index %>" href="OEBPS/page-<%= index %>.html" media-type="application/xhtml+xml" />
+        <% }); %>
+		<item id="cover-image" href="OEBPS/cover-image.jpg" media-type="image/jpeg" />
+		<item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml" />
+		<item id="stylesheet" href="OEBPS/jackson.css" media-type="text/css" />
+	</manifest>
+
+	<spine toc="ncx">
+		<itemref idref="front-cover" linear="no" />
+		<itemref idref="title-page" linear="yes" />
+		<itemref idref="copyright" linear="yes" />
+		<itemref idref="table-of-contents" linear="yes" />
+        <% toc.forEach(function(title, index){ %>
+            <itemref idref="page-<%= index %>" linear="yes" />
+        <% }); %>
+	</spine>
+
+	<guide>
+		<reference type="toc" title="Mục lục" href="OEBPS/table-of-contents.html" />
+		<reference type="cover" title="Bìa sách" href="OEBPS/front-cover.html" />
+	</guide>
+
+</package>

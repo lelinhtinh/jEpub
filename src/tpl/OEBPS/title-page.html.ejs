@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="vi">
+
+<head>
+	<title>Giới thiệu</title>
+	<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
+	<link rel="stylesheet" href="jackson.css" type="text/css" />
+</head>
+
+<body>
+	<div id="title-page">
+		<h1 class="title"><%= title %></h1>
+		<h2 class="subtitle"></h2>
+		<h3 class="author"><%= author %></h3>
+		<h4 class="publisher"><%= publisher %></h4>
+	</div>
+    <% if (description) { %>
+        <div class="ugc">
+            <p class="no-indent">
+                <%= description %>
+            </p>
+        </div>
+    <% } %>
+</body>
+
+</html>
