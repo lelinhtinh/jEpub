@@ -1,0 +1,17 @@
+{
+    "search.exclude": {
+        "**/node_modules": true,
+        "**/epub-sample": true
+    },
+    "files.exclude": {
+        "**/node_modules": true
+    },
+    "beautify.config": {
+        "indent_size": 4,
+        "end_with_newline": true
+    },
+    "editor.autoIndent": false,
+    "editor.wordWrap": "on",
+    "workbench.editor.closeOnFileDelete": false,
+    "editor.minimap.renderCharacters": false
+}
