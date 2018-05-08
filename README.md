@@ -112,3 +112,7 @@ Sửa lỗi gõ Tiếng Việt khi dùng extension **Markdown All in One**
   "when": "editorTextFocus && !editorHasSelection && !suggestWidgetVisible && editorLangId == 'markdown'"
 }
 ```
+
+### Google Chrome
+
+Thêm `--remote-debugging-port=9222` vào trình khởi chạy Chrome, khi debug ở chế độ [**attach**](https://github.com/Microsoft/vscode-chrome-debug#attach).
