@@ -1,11 +1,10 @@
 {
+  "files.exclude": {
+    "**/node_modules/*": true
+  },
   "search.exclude": {
-    "**/node_modules": true,
     "**/epub-sample": true,
     "**/dist": true
-  },
-  "files.exclude": {
-    "**/node_modules": true
   },
   "editor.autoIndent": false,
   "editor.wordWrap": "on",

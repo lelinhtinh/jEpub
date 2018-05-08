@@ -11,6 +11,9 @@
     "formulahendry.auto-close-tag",
     "formulahendry.auto-rename-tag",
     "EditorConfig.editorconfig",
-    "DigitalBrainstem.javascript-ejs-support"
+    "DigitalBrainstem.javascript-ejs-support",
+    "philfontaine.autolaunch",
+    "christian-kohler.path-intellisense",
+    "msjsdiag.debugger-for-chrome"
   ]
 }
