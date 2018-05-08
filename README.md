@@ -1,6 +1,6 @@
 # jEpub `WIP`
 
-Tạo epub dựa trên mẫu từ [Pressbooks](pressbooks.com) vì nó hoạt động tốt trên chiếc Lumia cũ của mình （。＞ω＜）。
+Tạo epub dựa trên mẫu từ [Pressbooks](https://pressbooks.com/) vì nó hoạt động tốt trên chiếc Lumia cũ của mình （。＞ω＜）。
 
 ## Todo
 
@@ -85,6 +85,10 @@ WIP *... đang phát triển*
   - Tên truyện
   - Tác giả
 
+#### Thử nghiệm ban đầu
+
+[https://jsfiddle.net/baivong/rhov44gg/](https://jsfiddle.net/baivong/rhov44gg/)
+
 ## Phát triển
 
 ### Lấy thời gian hiện tại
@@ -113,10 +117,6 @@ function uuidv4() {
   );
 }
 ```
-
-### Thử nghiệm
-
-[https://jsfiddle.net/baivong/rhov44gg/](https://jsfiddle.net/baivong/rhov44gg/)
 
 ### VSCode
 
