@@ -1,0 +1,18 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Development",
+      "auto": true,
+      "type": "npm",
+      "script": "start",
+      "problemMatcher": []
+    },
+    {
+      "label": "Production",
+      "type": "npm",
+      "script": "build",
+      "problemMatcher": []
+    }
+  ]
+}
