@@ -1,4 +1,4 @@
-# jEpub
+# jEpub `WIP`
 
 Tạo epub dựa trên mẫu từ [Pressbooks](pressbooks.com) vì nó hoạt động tốt trên chiếc Lumia cũ của mình （。＞ω＜）。
 
@@ -9,9 +9,9 @@ Tạo epub dựa trên mẫu từ [Pressbooks](pressbooks.com) vì nó hoạt đ
 - [x] Dựng template.
 - [ ] Hoàn tất API.
 - [ ] Tạo ảnh bìa từ tiêu đề.
-- [ ] Dùng Webpack để dựng thư viện.
+- [x] Dùng Webpack để dựng thư viện.
 - [ ] Viết unit test với Jasmine và Karma.
-- [ ] Đưa lên Github và NPM.
+- [x] Đưa lên Github và NPM.
 
 ### API
 
