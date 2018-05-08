@@ -9,7 +9,7 @@
     "prebuild": "npm run clean",
     "build": "webpack --config webpack.production.config.js",
     "prestart": "npm run clean",
-    "start": "webpack --config webpack.development.config.js",
+    "start": "webpack --config webpack.development.config.js --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -39,6 +39,8 @@
     "jszip": "^3.1.5"
   },
   "devDependencies": {
+    "browser-sync": "^2.24.4",
+    "browser-sync-webpack-plugin": "^2.2.2",
     "mkdirp": "^0.5.1",
     "rimraf": "^2.6.2",
     "webpack": "^4.8.0",
