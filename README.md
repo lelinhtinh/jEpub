@@ -22,6 +22,28 @@ Tạo epub dựa trên mẫu từ [Pressbooks](pressbooks.com) vì nó hoạt đ
 - [ ] `add`: Thêm chương.
 - [ ] `blob`: Xuất `Blob` object khi hoàn tất.
 
+### Cài đặt
+
+```bash
+npm i -S jepub
+```
+
+### CDN
+
+```html
+<script src="https://unpkg.com/jepub/dist/jepub.js"></script>
+```
+
+hoặc
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/jepub/dist/jepub.js"></script>
+```
+
+## Cách dùng
+
+WIP *... đang phát triển*
+
 ## Ghi chú
 
 ### Thư viện phụ thuộc
