@@ -1,6 +1,10 @@
 {
   "parserOptions": {
-    "sourceType": "module"
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "globalReturn": true,
+      "impliedStrict": true
+    }
   },
   "env": {
     "browser": true,
