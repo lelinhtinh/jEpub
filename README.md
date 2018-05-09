@@ -16,8 +16,7 @@ Tạo epub dựa trên mẫu từ [Pressbooks](https://pressbooks.com/) vì nó 
 ### API
 
 - [ ] `uuid`: Mã định danh.
-- [ ] `info`: Tên truyện, tác giả, giới thiệu, nguồn truyện.
-- [ ] `copyright`: Ghi công.
+- [ ] `notes`: Ghi chú.
 - [ ] `cover`: Dữ liệu ảnh bìa dạng `arraybuffer` object.
 - [ ] `add`: Thêm chương.
 - [ ] `blob`: Xuất `Blob` object khi hoàn tất.
@@ -58,31 +57,33 @@ WIP *... đang phát triển*
 
 - *Không thay đổi*
   - **container.xml**
-  - **copyright.html**
   - **front-cover.html**
   - **jackson.css**
   - **mimetype**
+- **notes.html**
+  - Ghi chú
 - **page-*.html**
   - Tên chương
   - Nội dung chương
 - **table-of-contents.html**
   - Mục lục
 - **title-page.html**
-  - Tên truyện
+  - Tên sách
   - Tác giả
-  - Nguồn truyện
-  - Giới thiệu truyện
+  - Nguồn sách
+  - Giới thiệu sách
 - **book.opf**
   - UUID
   - Mục lục
-  - Tên truyện
+  - Bìa sách
+  - Tên sách
   - Tác giả
-  - Nguồn truyện
-  - Giới thiệu truyện
+  - Nguồn sách
+  - Giới thiệu sách
 - **toc.ncx**
   - UUID
   - Mục lục
-  - Tên truyện
+  - Tên sách
   - Tác giả
 
 #### Thử nghiệm ban đầu
