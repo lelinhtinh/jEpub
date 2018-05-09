@@ -15,7 +15,7 @@
 			<h2 class="chapter-title"><%= title %></h2>
 		</div>
 		<div class="ugc chapter-ugc">
-            <% if typeof content === 'object' %>
+            <% if Array.isArray(content) %>
                 <% content.forEach(function(item){ %>
                     <p class="indent"><%- item %></p>
                 <% }); %>
