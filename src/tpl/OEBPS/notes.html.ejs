@@ -3,19 +3,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="vi">
 
 <head>
-	<title>Ghi công</title>
+	<title>Ghi chú</title>
 	<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
 	<link rel="stylesheet" href="jackson.css" type="text/css" />
 </head>
 
 <body>
-	<div id="copyright-page">
+	<div id="notes-page">
 		<div class="ugc">
-            <% if (copyright) { %>
-			    <p>Ebook này được tạo bằng <a href="https://github.com/lelinhtinh/jEpub">jEpub</a>.</p>
-            <% } else { %>
-                <%- copyright %>
-            <% } %>
+            <%- notes %>
 		</div>
 	</div>
 </body>

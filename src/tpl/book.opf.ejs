@@ -16,7 +16,7 @@
 	<manifest>
 		<item id="front-cover" href="OEBPS/front-cover.html" media-type="application/xhtml+xml" />
 		<item id="title-page" href="OEBPS/title-page.html" media-type="application/xhtml+xml" />
-		<item id="copyright" href="OEBPS/copyright.html" media-type="application/xhtml+xml" />
+		<item id="notes" href="OEBPS/notes.html" media-type="application/xhtml+xml" />
 		<item id="table-of-contents" href="OEBPS/table-of-contents.html" media-type="application/xhtml+xml" />
         <% toc.forEach(function(title, index){ %>
             <item id="page-<%= index %>" href="OEBPS/page-<%= index %>.html" media-type="application/xhtml+xml" />
@@ -29,11 +29,11 @@
 	<spine toc="ncx">
 		<itemref idref="front-cover" linear="no" />
 		<itemref idref="title-page" linear="yes" />
-		<itemref idref="copyright" linear="yes" />
 		<itemref idref="table-of-contents" linear="yes" />
         <% toc.forEach(function(title, index){ %>
             <itemref idref="page-<%= index %>" linear="yes" />
         <% }); %>
+        <itemref idref="notes" linear="yes" />
 	</spine>
 
 	<guide>
