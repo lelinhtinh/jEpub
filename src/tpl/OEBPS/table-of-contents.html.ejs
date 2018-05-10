@@ -12,10 +12,10 @@
 	<div id="toc">
 		<h1>Mục lục</h1>
 		<ul>
-            <% toc.forEach(function(title, index){ %>
+            <% pages.forEach(function(page, index) { %>
                 <li class="chaptertype-1">
                     <a href="page-<%= index %>.html">
-                        <span class="toc-chapter-title"><%= title %></span>
+                        <span class="toc-chapter-title"><%= page.title %></span>
                     </a>
                 </li>
             <% }); %>

@@ -11,10 +11,8 @@
 <body>
 	<div id="notes-page">
 		<div class="ugc">
-            <% if (notes) %>
-                <% content.forEach(function(item){ %>
-                    <p class="no-indent">Ebook này được tạo bằng <a href="https://github.com/lelinhtinh/jEpub">jEpub</a>.</p>
-                <% }); %>
+            <% if (!notes) { %>
+                <p class="no-indent">Ebook này được tạo bằng <a href="https://github.com/lelinhtinh/jEpub">jEpub</a>.</p>
             <% } else { %>
                 <%- notes %>
             <% } %>

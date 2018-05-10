@@ -3,18 +3,18 @@
 
 <ncx version="2005-1" xml:lang="vi" xmlns="http://www.daisy.org/z3986/2005/ncx/">
 	<head>
-		<meta name="dtb:uid" content="https://vi.lipsum.com/" />
+		<meta name="dtb:uid" content="<%= uuid %>" />
 		<meta name="dtb:depth" content="2" />
 		<meta name="dtb:totalPageCount" content="0" />
 		<meta name="dtb:maxPageNumber" content="0" />
 	</head>
 
 	<docTitle>
-		<text>Lorem Ipsum</text>
+		<text><%= title %></text>
 	</docTitle>
 
 	<docAuthor>
-		<text>Cicero</text>
+		<text><%= author %></text>
 	</docAuthor>
 
 	<navMap>
@@ -30,10 +30,10 @@
 			</navLabel>
 			<content src="OEBPS/table-of-contents.html" />
 		</navPoint>
-        <% toc.forEach(function(title, index){ %>
+        <% pages.forEach(function(page, index) { %>
             <navPoint id="page-<%= index %>" playOrder="<%= (index + 3) %>">
                 <navLabel>
-                    <text><%= title %></text>
+                    <text><%= page.title %></text>
                 </navLabel>
                 <content src="OEBPS/page-<%= index %>.html" />
             </navPoint>
