@@ -8,17 +8,16 @@ Tạo epub dựa trên mẫu từ [Pressbooks](https://pressbooks.com/) vì nó 
 - [x] Cấu hình editor.
 - [x] Dựng template.
 - [ ] Hoàn tất API.
-- [ ] Tạo ảnh bìa từ tiêu đề.
 - [x] Dùng Webpack để dựng thư viện.
 - [ ] Viết unit test với Jasmine và Karma.
 - [x] Đưa lên Github và NPM.
 
 ### API
 
-- [ ] `uuid`: Mã định danh.
-- [ ] `notes`: Ghi chú.
-- [ ] `cover`: Dữ liệu ảnh bìa dạng `arraybuffer` object.
-- [ ] `add`: Thêm chương.
+- [x] `uuid`: Mã định danh.
+- [x] `notes`: Ghi chú.
+- [x] `cover`: Dữ liệu ảnh bìa dạng `arraybuffer` object.
+- [x] `add`: Thêm chương.
 - [ ] `blob`: Xuất `Blob` object khi hoàn tất.
 
 ### Cài đặt
@@ -50,8 +49,7 @@ WIP *... đang phát triển*
 1. [`*` JSZip](https://github.com/Stuk/jszip): Tạo file và đóng gói epub.
 2. [`*` ejs](https://github.com/mde/ejs): Chuyển đổi epub template.
 3. [FileSaver.js](https://github.com/eligrey/FileSaver.js/): Tải epub sau khi hoàn tất.
-4. [html2canvas](https://github.com/niklasvh/html2canvas/): Tạo book cover.
-5. [JSZipUtils](https://github.com/Stuk/jszip-utils): Có thể dùng để tải book cover và một số file cố định khi đóng gói epub.
+4. [JSZipUtils](https://github.com/Stuk/jszip-utils): Giải nén epub để test, tải book cover và một số file cố định khi đóng gói epub.
 
 ### Cấu trúc
 
@@ -89,35 +87,6 @@ WIP *... đang phát triển*
 #### Thử nghiệm ban đầu
 
 [https://jsfiddle.net/baivong/rhov44gg/](https://jsfiddle.net/baivong/rhov44gg/)
-
-## Phát triển
-
-### Lấy thời gian hiện tại
-
-```js
-(new Date).toISOString();
-```
-
-### Tạo UUID
-
-[https://stackoverflow.com/a/2117523](https://stackoverflow.com/a/2117523)
-
-```js
-function uuidv4() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
-    var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
-    return v.toString(16);
-  });
-}
-```
-
-```js
-function uuidv4() {
-  return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
-    (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16)
-  );
-}
-```
 
 ### VSCode
 
