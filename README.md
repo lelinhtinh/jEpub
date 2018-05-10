@@ -1,13 +1,13 @@
-# jEpub `WIP`
+# jEpub
 
-Tạo epub dựa trên mẫu từ [Pressbooks](https://pressbooks.com/) vì nó hoạt động tốt trên chiếc Lumia cũ của mình （。＞ω＜）。
+Tạo EPUB dựa trên mẫu từ [Pressbooks](https://pressbooks.com/) vì nó hoạt động tốt trên chiếc Lumia cũ của mình （。＞ω＜）。
 
 ## Todo
 
-- [x] Tạo epub mẫu.
+- [x] Tạo EPUB mẫu.
 - [x] Cấu hình editor.
 - [x] Dựng template.
-- [ ] Hoàn tất API.
+- [x] Hoàn tất API.
 - [x] Dùng Webpack để dựng thư viện.
 - [ ] Viết unit test với Jasmine và Karma.
 - [x] Đưa lên Github và NPM.
@@ -16,11 +16,11 @@ Tạo epub dựa trên mẫu từ [Pressbooks](https://pressbooks.com/) vì nó 
 
 - [x] `uuid`: Mã định danh.
 - [x] `notes`: Ghi chú.
-- [x] `cover`: Dữ liệu ảnh bìa dạng `arraybuffer` object.
+- [x] `cover`: Dữ liệu ảnh bìa dạng ArrayBuffer object.
 - [x] `add`: Thêm chương.
-- [ ] `blob`: Xuất `Blob` object khi hoàn tất.
+- [x] `generate`: Xuất EPUB data khi hoàn tất.
 
-### Cài đặt
+## Cài đặt
 
 ```bash
 npm i -S jepub
@@ -40,16 +40,71 @@ hoặc
 
 ## Cách dùng
 
-WIP *... đang phát triển*
+```typescript
+const jepub = new jEpub({
+    title: 'Tiêu đề',
+    author: 'Tác giả',
+    publisher: 'Nguồn sách',
+    description: 'Giới thiệu' // Không bắt buộc
+});
+```
+
+### Mã định danh
+
+```typescript
+jepub.uuid(id: string | number)
+```
+
+- `id` không được trùng lặp.
+
+### Thêm bìa sách
+
+```typescript
+jepub.cover(buffer: object)
+```
+
+- `buffer` bắt buộc là dữ liệu dạng **ArrayBuffer** object.
+
+### Thêm ghi chú
+
+```typescript
+jepub.notes(content: string)
+```
+
+- `content` có thể sử dụng **HTML string** và không được rỗng.
+
+### Thêm chương `*`
+
+```typescript
+jepub.add(title: string, content: string | array);
+```
+
+- `title` không được dùng **HTML string** và không được rỗng.
+- `content` không được rỗng. Nếu ở dạng `string` có thể sử dụng **HTML string**, còn ở dạng `array` thì không được dùng.
+
+### Tạo EPUB `*`
+
+```typescript
+jepub.generate(type = 'blob')
+```
+
+- `type` bao gồm các giá trị:
+  - `blob` (*mặc định*)
+  - `base64`
+  - `binarystring`
+  - `array`
+  - `uint8array`
+  - `arraybuffer`
+  - `nodebuffer` (*nodejs*)
 
 ## Ghi chú
 
 ### Thư viện phụ thuộc
 
-1. [`*` JSZip](https://github.com/Stuk/jszip): Tạo file và đóng gói epub.
-2. [`*` ejs](https://github.com/mde/ejs): Chuyển đổi epub template.
-3. [FileSaver.js](https://github.com/eligrey/FileSaver.js/): Tải epub sau khi hoàn tất.
-4. [JSZipUtils](https://github.com/Stuk/jszip-utils): Giải nén epub để test, tải book cover và một số file cố định khi đóng gói epub.
+1. [JSZip `*`](https://github.com/Stuk/jszip): Tạo file và đóng gói EPUB.
+2. [ejs `*`](https://github.com/mde/ejs): Chuyển đổi EPUB template.
+3. [FileSaver.js](https://github.com/eligrey/FileSaver.js/): Tải EPUB sau khi hoàn tất.
+4. [JSZipUtils](https://github.com/Stuk/jszip-utils): Giải nén EPUB để test, tải book cover và một số file cố định khi đóng gói EPUB.
 
 ### Cấu trúc
 
