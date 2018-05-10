@@ -50,7 +50,6 @@ export default class jEpub {
     }
 
     notes(content) {
-
         if (utils.isEmpty(content)) {
             throw 'Notes is empty';
         } else {
@@ -71,5 +70,81 @@ export default class jEpub {
             });
             return this;
         }
+    }
+
+    generate(type = 'blob') {
+        const zip = new JSZip();
+
+        let metaInf = zip.folder('META-INF'),
+            oebps = zip.folder('OEBPS');
+
+        metaInf.file('container.xml', container);
+
+        if (this.jCover) {
+            oebps.file('cover-image.jpg', this.jCover);
+            oebps.file('front-cover.html', cover);
+        }
+
+        oebps.file('jackson.css', style);
+
+        oebps.file('notes.html', ejs.render(notes, {
+            client: true,
+            notes: this.jNotes
+        }));
+
+        this.pages.forEach((item, index) => {
+            oebps.file(`page-${index}.html`, ejs.render(page, {
+                title: item.title,
+                content: item.content
+            }));
+        });
+
+        oebps.file('table-of-contents.html', ejs.render(tocInBook, {
+            pages: this.pages
+        }));
+
+        oebps.file('title-page.html', ejs.render(info, {
+            title: this.jInfo.title,
+            author: this.jInfo.author,
+            publisher: this.jInfo.publisher,
+            description: this.jInfo.description
+        }));
+
+        zip.file('book.opf', ejs.render(bookConfig, {
+            uuid: this.jUuid,
+            title: this.jInfo.title,
+            author: this.jInfo.author,
+            publisher: this.jInfo.publisher,
+            description: this.jInfo.description,
+            cover: this.jCover,
+            pages: this.pages
+        }));
+
+        zip.file('mimetype', 'application/epub+zip');
+
+        zip.file('toc.ncx', ejs.render(toc, {
+            uuid: this.jUuid,
+            title: this.jInfo.title,
+            author: this.jInfo.author,
+            pages: this.pages
+        }));
+
+        return new Promise((resolve, reject) => {
+            zip.generateAsync(
+                {
+                    type: type,
+                    mimeType: 'application/epub+zip',
+                    compression: 'DEFLATE',
+                    compressionOptions: {
+                        level: 9
+                    }
+                })
+                .then(function (content) {
+                    resolve(content);
+                })
+                .catch(function (err) {
+                    reject(err);
+                });
+        });
     }
 }
