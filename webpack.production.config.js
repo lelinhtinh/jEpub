@@ -1,6 +1,10 @@
 /* eslint-env node */
 const path = require('path');
 
+const webpack = require('webpack');
+const PACKAGE = require('./package.json');
+const banner = `${PACKAGE.name} - ${PACKAGE.version} | (c) 2018 ${PACKAGE.author} | ${PACKAGE.license} | ${PACKAGE.homepage}`;
+
 module.exports = {
     mode: 'production',
     target: 'web',
@@ -39,5 +43,8 @@ module.exports = {
                 use: 'babel-loader'
             }
         ]
-    }
+    },
+    plugins: [
+        new webpack.BannerPlugin(banner)
+    ]
 };
