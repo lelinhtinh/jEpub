@@ -14,7 +14,7 @@ module.exports = {
     entry: './src/jepub.js',
     output: {
         path: path.resolve(__dirname, 'dist'),
-        filename: 'jepub.js',
+        filename: 'jepub.min.js',
         library: 'jEpub',
         libraryTarget: 'umd',
         umdNamedDefine: true
@@ -22,11 +22,10 @@ module.exports = {
     resolve: {
         extensions: ['.js', '.ejs']
     },
-    devtool: 'source-map',
     module: {
         rules: [
             {
-                test: /\.(xml|html|css|ejs)$/,
+                test: /[^.]|\.(xml|html|css|ejs)$/,
                 include: [
                     path.resolve(__dirname, 'src/tpl')
                 ],
