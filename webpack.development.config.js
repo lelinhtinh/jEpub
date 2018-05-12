@@ -23,7 +23,7 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /\.(xml|html|css|ejs)$/,
+                test: /[^.]|\.(xml|html|css|ejs)$/,
                 include: [
                     path.resolve(__dirname, 'src/tpl')
                 ],
