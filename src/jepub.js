@@ -13,6 +13,7 @@ import page from './tpl/OEBPS/page.html';
 import tocInBook from './tpl/OEBPS/table-of-contents.html';
 import info from './tpl/OEBPS/title-page.html';
 import bookConfig from './tpl/book.opf';
+import mime from './tpl/mimetype';
 import toc from './tpl/toc.ncx';
 
 export default class jEpub {
@@ -120,7 +121,7 @@ export default class jEpub {
             pages: this.pages
         }));
 
-        zip.file('mimetype', 'application/epub+zip');
+        zip.file('mimetype', mime);
 
         zip.file('toc.ncx', ejs.render(toc, {
             uuid: this.jUuid,
@@ -133,16 +134,16 @@ export default class jEpub {
             zip.generateAsync(
                 {
                     type: type,
-                    mimeType: 'application/epub+zip',
+                    mimeType: mime,
                     compression: 'DEFLATE',
                     compressionOptions: {
                         level: 9
                     }
                 })
-                .then(function (content) {
+                .then(content => {
                     resolve(content);
                 })
-                .catch(function (err) {
+                .catch(err => {
                     reject(err);
                 });
         });
