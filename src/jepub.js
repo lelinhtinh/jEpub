@@ -146,22 +146,14 @@ export default class jEpub {
             pages: this.pages
         }));
 
-        return new Promise((resolve, reject) => {
-            zip.generateAsync(
-                {
-                    type: type,
-                    mimeType: mime,
-                    compression: 'DEFLATE',
-                    compressionOptions: {
-                        level: 9
-                    }
-                })
-                .then(content => {
-                    resolve(content);
-                })
-                .catch(err => {
-                    reject(err);
-                });
-        });
+        return zip.generateAsync(
+            {
+                type: type,
+                mimeType: mime,
+                compression: 'DEFLATE',
+                compressionOptions: {
+                    level: 9
+                }
+            });
     }
 }
