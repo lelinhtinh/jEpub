@@ -3,7 +3,7 @@
 
 	<metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">
 		<dc:title><%= title %></dc:title>
-		<dc:language>vi</dc:language>
+		<dc:language><%= i18n.code %></dc:language>
 		<dc:identifier id="PrimaryID" opf:scheme="URI"><%= uuid %></dc:identifier>
         <% if (description) { %>
 		    <dc:description><%= description %></dc:description>
@@ -46,9 +46,9 @@
 
 	<guide>
         <% if (cover) { %>
-		    <reference type="cover" title="Bìa sách" href="OEBPS/front-cover.html" />
+		    <reference type="cover" title="<%= i18n.cover %>" href="OEBPS/front-cover.html" />
         <% } %>
-		<reference type="toc" title="Mục lục" href="OEBPS/table-of-contents.html" />
+		<reference type="toc" title="<%= i18n.toc %>" href="OEBPS/table-of-contents.html" />
 	</guide>
 
 </package>

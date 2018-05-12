@@ -5,6 +5,8 @@ import ejs from 'ejs';
 
 import * as utils from './utils';
 
+import language from './i18n.json';
+
 import container from './tpl/META-INF/container.xml';
 import cover from './tpl/OEBPS/front-cover.html';
 import style from './tpl/OEBPS/jackson.css';
@@ -19,6 +21,7 @@ import toc from './tpl/toc.ncx';
 export default class jEpub {
     constructor(details) {
         this.jInfo = Object.assign({}, {
+            i18n: 'vi',
             title: 'undefined',
             author: 'undefined',
             publisher: 'undefined',
@@ -79,32 +82,43 @@ export default class jEpub {
         let metaInf = zip.folder('META-INF'),
             oebps = zip.folder('OEBPS');
 
+        if(!JSZip.support[type]) throw `This browser does not support ${type}`;
+
+        if (!language[this.jInfo.i18n]) throw `Unknown Language: ${this.jInfo.i18n}`;
+        const i18n = language[this.jInfo.i18n];
+
         metaInf.file('container.xml', container);
 
         if (this.jCover) {
             oebps.file('cover-image.jpg', this.jCover);
-            oebps.file('front-cover.html', cover);
+            oebps.file('front-cover.html', ejs.render(cover, {
+                i18n: i18n
+            }));
         }
 
         oebps.file('jackson.css', style);
 
         oebps.file('notes.html', ejs.render(notes, {
+            i18n: i18n,
             client: true,
             notes: this.jNotes
         }));
 
         this.pages.forEach((item, index) => {
             oebps.file(`page-${index}.html`, ejs.render(page, {
+                i18n: i18n,
                 title: item.title,
                 content: item.content
             }));
         });
 
         oebps.file('table-of-contents.html', ejs.render(tocInBook, {
+            i18n: i18n,
             pages: this.pages
         }));
 
         oebps.file('title-page.html', ejs.render(info, {
+            i18n: i18n,
             title: this.jInfo.title,
             author: this.jInfo.author,
             publisher: this.jInfo.publisher,
@@ -112,6 +126,7 @@ export default class jEpub {
         }));
 
         zip.file('book.opf', ejs.render(bookConfig, {
+            i18n: i18n,
             uuid: this.jUuid,
             title: this.jInfo.title,
             author: this.jInfo.author,
@@ -124,6 +139,7 @@ export default class jEpub {
         zip.file('mimetype', mime);
 
         zip.file('toc.ncx', ejs.render(toc, {
+            i18n: i18n,
             uuid: this.jUuid,
             title: this.jInfo.title,
             author: this.jInfo.author,
