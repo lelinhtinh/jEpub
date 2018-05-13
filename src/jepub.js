@@ -20,7 +20,7 @@ import toc from './tpl/toc.ncx';
 
 export default class jEpub {
     constructor(details) {
-        this.jInfo = Object.assign({}, {
+        this._Info = Object.assign({}, {
             i18n: 'vi',
             title: 'undefined',
             author: 'undefined',
@@ -28,25 +28,25 @@ export default class jEpub {
             description: ''
         }, details);
 
-        this.jUuid = utils.uuidv4();
-        this.jCover = '';
-        this.jNotes = '';
+        this._Uuid = utils.uuidv4();
+        this._Cover = '';
+        this._Notes = '';
 
-        this.pages = [];
+        this._Pages = [];
     }
 
     uuid(id) {
         if (utils.isEmpty(id)) {
             throw 'UUID value is empty';
         } else {
-            this.jUuid = id;
+            this._Uuid = id;
             return this;
         }
     }
 
     cover(data) {
         if (utils.isArrayBuffer(data)) {
-            this.jCover = data;
+            this._Cover = data;
             return this;
         } else {
             throw 'Cover data is not valid';
@@ -57,7 +57,7 @@ export default class jEpub {
         if (utils.isEmpty(content)) {
             throw 'Notes is empty';
         } else {
-            this.jNotes = content;
+            this._Notes = content;
             return this;
         }
     }
@@ -68,7 +68,7 @@ export default class jEpub {
         } else if (utils.isEmpty(content)) {
             throw `Content of ${title} is empty`;
         } else {
-            this.pages.push({
+            this._Pages.push({
                 title: title,
                 content: content
             });
@@ -84,13 +84,13 @@ export default class jEpub {
 
         if (!JSZip.support[type]) throw `This browser does not support ${type}`;
 
-        if (!language[this.jInfo.i18n]) throw `Unknown Language: ${this.jInfo.i18n}`;
-        const i18n = language[this.jInfo.i18n];
+        if (!language[this._Info.i18n]) throw `Unknown Language: ${this._Info.i18n}`;
+        const i18n = language[this._Info.i18n];
 
         metaInf.file('container.xml', container);
 
-        if (this.jCover) {
-            oebps.file('cover-image.jpg', this.jCover);
+        if (this._Cover) {
+            oebps.file('cover-image.jpg', this._Cover);
             oebps.file('front-cover.html', ejs.render(cover, {
                 i18n: i18n
             }));
@@ -101,10 +101,10 @@ export default class jEpub {
         oebps.file('notes.html', ejs.render(notes, {
             i18n: i18n,
             client: true,
-            notes: utils.parseDOM(this.jNotes)
+            notes: utils.parseDOM(this._Notes)
         }));
 
-        this.pages.forEach((item, index) => {
+        this._Pages.forEach((item, index) => {
             let content = item.content;
             if (!Array.isArray(content)) content = utils.parseDOM(content);
 
@@ -117,36 +117,36 @@ export default class jEpub {
 
         oebps.file('table-of-contents.html', ejs.render(tocInBook, {
             i18n: i18n,
-            pages: this.pages
+            pages: this._Pages
         }));
 
         oebps.file('title-page.html', ejs.render(info, {
             i18n: i18n,
-            title: this.jInfo.title,
-            author: this.jInfo.author,
-            publisher: this.jInfo.publisher,
-            description: utils.parseDOM(this.jInfo.description)
+            title: this._Info.title,
+            author: this._Info.author,
+            publisher: this._Info.publisher,
+            description: utils.parseDOM(this._Info.description)
         }));
 
         zip.file('book.opf', ejs.render(bookConfig, {
             i18n: i18n,
-            uuid: this.jUuid,
-            title: this.jInfo.title,
-            author: this.jInfo.author,
-            publisher: this.jInfo.publisher,
-            description: utils.html2text(this.jInfo.description, true),
-            cover: this.jCover,
-            pages: this.pages
+            uuid: this._Uuid,
+            title: this._Info.title,
+            author: this._Info.author,
+            publisher: this._Info.publisher,
+            description: utils.html2text(this._Info.description, true),
+            cover: this._Cover,
+            pages: this._Pages
         }));
 
         zip.file('mimetype', mime);
 
         zip.file('toc.ncx', ejs.render(toc, {
             i18n: i18n,
-            uuid: this.jUuid,
-            title: this.jInfo.title,
-            author: this.jInfo.author,
-            pages: this.pages
+            uuid: this._Uuid,
+            title: this._Info.title,
+            author: this._Info.author,
+            pages: this._Pages
         }));
 
         return zip.generateAsync({
