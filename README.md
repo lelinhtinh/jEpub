@@ -1,151 +1,104 @@
 # jEpub
 
-Tạo EPUB dựa trên mẫu từ [Pressbooks](https://pressbooks.com/) vì nó hoạt động tốt trên chiếc Lumia cũ của mình （。＞ω＜）。
+EPUB Generator, using templates from [Pressbooks](https://pressbooks.com/), because it works perfectly with my old Lumia （。＞ω＜）。
 
-## Todo
+## Demo
 
-- [x] Tạo EPUB mẫu.
-- [x] Cấu hình editor.
-- [x] Dựng template.
-- [x] Hoàn tất API.
-- [x] Dùng Webpack để dựng thư viện.
-- [ ] Viết unit test với Jasmine và Karma.
-- [x] Đưa lên Github và NPM.
+[jsfiddle.net/rhov44gg](https://jsfiddle.net/baivong/rhov44gg/embedded/result,resources,js,html/)
 
-### API
-
-- [x] `uuid`: Mã định danh.
-- [x] `notes`: Ghi chú.
-- [x] `cover`: Dữ liệu ảnh bìa dạng ArrayBuffer object.
-- [x] `add`: Thêm chương.
-- [x] `generate`: Xuất EPUB data khi hoàn tất.
-
-## Cài đặt
+## Installation
 
 ```bash
-npm i -S jepub
+npm install --save jepub
 ```
 
-### CDN
+You can also use it via a CDN:
 
 ```html
-<script src="https://unpkg.com/jepub/dist/jepub.js"></script>
+<script src="https://unpkg.com/jepub/dist/jepub.min.js"></script>
 ```
 
-hoặc
+or:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/jepub/dist/jepub.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jepub/dist/jepub.min.js"></script>
 ```
 
-## Cách dùng
+## Usage
 
 ```typescript
 const jepub = new jEpub({
-    title: 'Tiêu đề',
-    author: 'Tác giả',
-    publisher: 'Nguồn sách',
-    description: 'Giới thiệu' // Không bắt buộc
+    i18n: 'en', // Internationalization
+    title: 'Book title',
+    author: 'Book author',
+    publisher: 'Book publisher',
+    description: '<b>Book</b> description' // optional
 });
 ```
 
-### Mã định danh
+- **i18n** only include the language codes defined in [`i18n.json`](https://github.com/lelinhtinh/jEpub/raw/master/src/i18n.json)
+- **description**: HTML string.
+
+### Set identifier
 
 ```typescript
 jepub.uuid(id: string | number)
 ```
 
-- `id` không được trùng lặp.
+- **id** is unique.
 
-### Thêm bìa sách
+### Add cover
 
 ```typescript
 jepub.cover(buffer: object)
 ```
 
-- `buffer` bắt buộc là dữ liệu dạng **ArrayBuffer** object.
+- **buffer**: ArrayBuffer Object from XMLHttpRequest.
 
-### Thêm ghi chú
+### Add notes
 
 ```typescript
 jepub.notes(content: string)
 ```
 
-- `content` có thể sử dụng **HTML string** và không được rỗng.
+- **content**: HTML string.
 
-### Thêm chương `*`
+### Add chapter `*`
 
 ```typescript
-jepub.add(title: string, content: string | array);
+jepub.add(title: string, content: string | array)
 ```
 
-- `title` không được dùng **HTML string** và không được rỗng.
-- `content` không được rỗng. Nếu ở dạng `string` có thể sử dụng **HTML string**, còn ở dạng `array` thì không được dùng.
+- **title**: Plain text.
+- **content**:
+  - `string`: HTML string.
+  - `array`: Plain text for each item.
 
-### Tạo EPUB `*`
+### Generate EPUB `*`
 
 ```typescript
 jepub.generate(type = 'blob')
 ```
 
-- `type` bao gồm các giá trị:
-  - `blob` (*mặc định*)
-  - `base64`
-  - `binarystring`
-  - `array`
-  - `uint8array`
-  - `arraybuffer`
-  - `nodebuffer` (*nodejs*)
+- **type**: Possible values `blob` (*default*), `base64`, `binarystring`, `array`, `uint8array`, `arraybuffer`, `nodebuffer` (*NodeJS*).
 
-## Ghi chú
+## Development
 
-### Thư viện phụ thuộc
+```bash
+npm start
+```
 
-1. [JSZip `*`](https://github.com/Stuk/jszip): Tạo file và đóng gói EPUB.
-2. [ejs `*`](https://github.com/mde/ejs): Chuyển đổi EPUB template.
-3. [FileSaver.js](https://github.com/eligrey/FileSaver.js/): Tải EPUB sau khi hoàn tất.
-4. [JSZipUtils](https://github.com/Stuk/jszip-utils): Giải nén EPUB để test, tải book cover và một số file cố định khi đóng gói EPUB.
+This command can be executed automatically if you use **VSCode**, which is implemented by [AutoLaunch extension](https://github.com/lelinhtinh/jEpub/blob/master/.vscode/extensions.json#L15) and configured in [Development task](https://github.com/lelinhtinh/jEpub/blob/master/.vscode/tasks.json#L6).
 
-### Cấu trúc
+Builds are concatenated and minified using [Webpack](https://webpack.js.org/) and [Babel](https://babeljs.io/).
 
-- *Không thay đổi*
-  - **container.xml**
-  - **front-cover.html**
-  - **jackson.css**
-  - **mimetype**
-- **notes.html**
-  - Ghi chú
-- **page-*.html**
-  - Tên chương
-  - Nội dung chương
-- **table-of-contents.html**
-  - Mục lục
-- **title-page.html**
-  - Tên sách
-  - Tác giả
-  - Nguồn sách
-  - Giới thiệu sách
-- **book.opf**
-  - UUID
-  - Mục lục
-  - Bìa sách
-  - Tên sách
-  - Tác giả
-  - Nguồn sách
-  - Giới thiệu sách
-- **toc.ncx**
-  - UUID
-  - Mục lục
-  - Tên sách
-  - Tác giả
-
-#### Thử nghiệm ban đầu
-
-[https://jsfiddle.net/baivong/rhov44gg/](https://jsfiddle.net/baivong/rhov44gg/)
+```bash
+npm run build
+```
 
 ### VSCode
 
-Sửa lỗi gõ Tiếng Việt khi dùng extension **Markdown All in One**
+Fix [**Markdown All in One `#41`**](https://github.com/neilsustc/vscode-markdown/issues/41): Add to `keybindings.json`
 
 ```json
 {
@@ -160,6 +113,8 @@ Sửa lỗi gõ Tiếng Việt khi dùng extension **Markdown All in One**
 }
 ```
 
-### Google Chrome
+Start **Chrome** with the `--remote-debugging-port=9222` flag when debugging in the [`attach`](https://github.com/Microsoft/vscode-chrome-debug#attach) mode.
 
-Thêm `--remote-debugging-port=9222` vào trình khởi chạy Chrome, khi debug ở chế độ [**attach**](https://github.com/Microsoft/vscode-chrome-debug#attach).
+## License
+
+ISC. Copyright 2018 [lelinhtinh](https://github.com/lelinhtinh)
