@@ -100,7 +100,6 @@ export default class jEpub {
 
         oebps.file('notes.html', ejs.render(notes, {
             i18n: i18n,
-            client: true,
             notes: utils.parseDOM(this._Notes)
         }));
 
