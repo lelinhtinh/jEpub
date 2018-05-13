@@ -1,12 +1,11 @@
 {
   "name": "jepub",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Generate simple EPUB books with JavaScript.",
-  "main": "dist/jepub.js",
+  "main": "src/jepub.js",
   "scripts": {
     "clean": "rimraf dist",
     "postclean": "mkdirp dist",
-    "prebuild": "npm run clean",
     "build": "webpack --config webpack.production.config.js",
     "prestart": "npm run clean",
     "start": "webpack --config webpack.development.config.js --watch",
@@ -50,7 +49,7 @@
     "mkdirp": "^0.5.1",
     "raw-loader": "^0.5.1",
     "rimraf": "^2.6.2",
-    "webpack": "^4.8.1",
+    "webpack": "^4.8.3",
     "webpack-cli": "^2.1.3"
   }
 }
