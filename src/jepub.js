@@ -82,7 +82,7 @@ export default class jEpub {
         let metaInf = zip.folder('META-INF'),
             oebps = zip.folder('OEBPS');
 
-        if(!JSZip.support[type]) throw `This browser does not support ${type}`;
+        if (!JSZip.support[type]) throw `This browser does not support ${type}`;
 
         if (!language[this.jInfo.i18n]) throw `Unknown Language: ${this.jInfo.i18n}`;
         const i18n = language[this.jInfo.i18n];
@@ -101,14 +101,17 @@ export default class jEpub {
         oebps.file('notes.html', ejs.render(notes, {
             i18n: i18n,
             client: true,
-            notes: this.jNotes
+            notes: utils.parseDOM(this.jNotes)
         }));
 
         this.pages.forEach((item, index) => {
+            let content = item.content;
+            if (!Array.isArray(content)) content = utils.parseDOM(content);
+
             oebps.file(`page-${index}.html`, ejs.render(page, {
                 i18n: i18n,
                 title: item.title,
-                content: item.content
+                content: content
             }));
         });
 
@@ -122,7 +125,7 @@ export default class jEpub {
             title: this.jInfo.title,
             author: this.jInfo.author,
             publisher: this.jInfo.publisher,
-            description: this.jInfo.description
+            description: utils.parseDOM(this.jInfo.description)
         }));
 
         zip.file('book.opf', ejs.render(bookConfig, {
@@ -131,7 +134,7 @@ export default class jEpub {
             title: this.jInfo.title,
             author: this.jInfo.author,
             publisher: this.jInfo.publisher,
-            description: this.jInfo.description,
+            description: utils.html2text(this.jInfo.description, true),
             cover: this.jCover,
             pages: this.pages
         }));
@@ -146,14 +149,13 @@ export default class jEpub {
             pages: this.pages
         }));
 
-        return zip.generateAsync(
-            {
-                type: type,
-                mimeType: mime,
-                compression: 'DEFLATE',
-                compressionOptions: {
-                    level: 9
-                }
-            });
+        return zip.generateAsync({
+            type: type,
+            mimeType: mime,
+            compression: 'DEFLATE',
+            compressionOptions: {
+                level: 9
+            }
+        });
     }
 }
