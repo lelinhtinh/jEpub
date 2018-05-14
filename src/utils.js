@@ -38,7 +38,7 @@ export function isEmpty(val) {
  * @param {Object} date
  * @returns {string} ISO date
  */
-export function getCurrentDate(date = new Date()) {
+export function getISODate(date = new Date()) {
     return date.toISOString();
 }
 
@@ -51,7 +51,7 @@ export function parseDOM(html, outText = false) {
     let doc = (new DOMParser).parseFromString(
         `<!doctype html><body>${html}`,
         'text/html');
-    if (outText) return doc.body.textContent;
+    if (outText) return doc.body.textContent.trim();
     doc = (new XMLSerializer).serializeToString(doc.body);
     doc = doc.replace(/(^<body\s?[^>]*>|<\/body>$)/g, '');
     return doc;
