@@ -1,18 +1,22 @@
-import './jepub.js';
+import 'https://unpkg.com/jepub/dist/jepub.min.js';
 
-fetch('./cover-image.jpg').then(response => {
-        if(response.ok) return response.arrayBuffer();
-        throw 'Network response was not ok.';
-    })
-    .then(buffer => {
-
+/* eslint-disable no-console */
+fetch('./cover-image.jpg').then(response =>
+{
+    if (response.ok) return response.arrayBuffer();
+    throw 'Network response was not ok.';
+}).then(buffer =>
+{
 
     const jepub = new jEpub({
         title: 'Lorem Ipsum',
         author: 'Cicero',
         publisher: 'lipsum.com',
-        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.'
+        description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+        tags: ['lorem', 'ipsum', 'dolor', 'sit', 'amet']
     });
+
+    jepub.uuid('https://vi.lipsum.com/');
 
     jepub.cover(buffer).notes('<p class="no-indent">Dịch sang Tiếng Việt bởi <strong>Đỗ Việt</strong> - www.doviet.net</p>');
 
@@ -40,12 +44,9 @@ fetch('./cover-image.jpg').then(response => {
         link.href = url;
         link.textContent = 'Download EPUB';
         link.download = 'lorem-ipsum.epub';
-
-        // URL.revokeObjectURL(url);
     }).catch(err => {
         console.error(err);
     });
-
 
 }).catch(err => {
     console.error(err);
