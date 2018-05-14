@@ -29,7 +29,10 @@ export default class jEpub {
             tags: []
         }, details);
 
-        this._Uuid = utils.uuidv4();
+        this._Uuid = {
+            scheme: 'uuid',
+            id: utils.uuidv4()
+        };
         this._Date = utils.getISODate();
         this._Cover = '';
         this._Notes = '';
@@ -54,7 +57,13 @@ export default class jEpub {
         if (utils.isEmpty(id)) {
             throw 'UUID value is empty';
         } else {
-            this._Uuid = id;
+            let scheme = 'uuid';
+            if (utils.validateUrl(id))
+                scheme = 'URI';
+            this._Uuid = {
+                scheme: scheme,
+                id: id
+            };
             return this;
         }
     }

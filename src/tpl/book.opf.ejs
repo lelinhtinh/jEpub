@@ -4,7 +4,7 @@
 	<metadata xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:opf="http://www.idpf.org/2007/opf">
 		<dc:title><%= title %></dc:title>
 		<dc:language><%= i18n.code %></dc:language>
-		<dc:identifier id="PrimaryID" opf:scheme="URI"><%= uuid %></dc:identifier>
+		<dc:identifier id="PrimaryID" opf:scheme="<%= uuid.scheme %>"><%= uuid.id %></dc:identifier>
         <dc:date opf:event="publication"><%= date %></dc:date>
         <% if (description) { %>
 		    <dc:description><%= description %></dc:description>
