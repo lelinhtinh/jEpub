@@ -32,7 +32,7 @@ const jepub = new jEpub({
     title: 'Book title',
     author: 'Book author',
     publisher: 'Book publisher',
-    description: '<b>Book</b> description' // optional
+    description: '<b>Book</b> description', // optional
     tags: [ 'epub', 'tag' ] // optional
 });
 ```
