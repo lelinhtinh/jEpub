@@ -29,6 +29,7 @@ export default class jEpub {
         }, details);
 
         this._Uuid = utils.uuidv4();
+        this._Date = utils.getISODate();
         this._Cover = '';
         this._Notes = '';
 
@@ -37,6 +38,15 @@ export default class jEpub {
 
     static html2text(html) {
         return utils.html2text(html);
+    }
+
+    date(date) {
+        if (date instanceof Date) {
+            throw 'UUID value is empty';
+        } else {
+            this._Date = utils.getISODate(date);
+            return this;
+        }
     }
 
     uuid(id) {
@@ -49,7 +59,7 @@ export default class jEpub {
     }
 
     cover(data) {
-        if (utils.isArrayBuffer(data)) {
+        if (data instanceof ArrayBuffer) {
             this._Cover = data;
             return this;
         } else {
@@ -134,6 +144,7 @@ export default class jEpub {
         zip.file('book.opf', ejs.render(bookConfig, {
             i18n: i18n,
             uuid: this._Uuid,
+            date: this._Date,
             title: this._Info.title,
             author: this._Info.author,
             publisher: this._Info.publisher,
