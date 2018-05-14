@@ -11,14 +11,6 @@ export function uuidv4() {
 }
 
 /**
- * Checks if a data is ArrayBuffer
- * @returns {boolean}
- */
-export function isArrayBuffer(data) {
-    return data instanceof ArrayBuffer;
-}
-
-/**
  * Checks if a value is empty
  * @returns {boolean}
  */
