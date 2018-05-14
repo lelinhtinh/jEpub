@@ -4,7 +4,8 @@ EPUB Generator, using templates from [Pressbooks](https://pressbooks.com/), beca
 
 ## Demo
 
-[jsfiddle.net/rhov44gg](https://jsfiddle.net/baivong/rhov44gg/embedded/result,resources,js,html/)
+1. [/demo](https://lelinhtinh.github.io/jEpub/demo/)
+2. [jsfiddle.net/rhov44gg](https://jsfiddle.net/baivong/rhov44gg/embedded/result,resources,js,html/)
 
 ## Installation
 
