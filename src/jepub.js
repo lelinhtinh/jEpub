@@ -25,7 +25,8 @@ export default class jEpub {
             title: 'undefined',
             author: 'undefined',
             publisher: 'undefined',
-            description: ''
+            description: '',
+            tags: []
         }, details);
 
         this._Uuid = utils.uuidv4();
@@ -138,7 +139,8 @@ export default class jEpub {
             title: this._Info.title,
             author: this._Info.author,
             publisher: this._Info.publisher,
-            description: utils.parseDOM(this._Info.description)
+            description: utils.parseDOM(this._Info.description),
+            tags: this._Info.tags,
         }));
 
         zip.file('book.opf', ejs.render(bookConfig, {
@@ -149,6 +151,7 @@ export default class jEpub {
             author: this._Info.author,
             publisher: this._Info.publisher,
             description: utils.html2text(this._Info.description, true),
+            tags: this._Info.tags,
             cover: this._Cover,
             pages: this._Pages
         }));

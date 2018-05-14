@@ -14,6 +14,9 @@
         <% if (cover) { %>
 		    <meta name="cover" content="cover-image" />
         <% } %>
+        <% if (Array.isArray(tags) && tags.length) tags.forEach(function(tag) { %>
+            <dc:subject><%= tag %></dc:subject>
+        <% }); %>
 	</metadata>
 
 	<manifest>
