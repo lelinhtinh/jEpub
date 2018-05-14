@@ -33,11 +33,20 @@ const jepub = new jEpub({
     author: 'Book author',
     publisher: 'Book publisher',
     description: '<b>Book</b> description' // optional
+    tags: [ 'epub', 'tag' ] // optional
 });
 ```
 
 - **i18n** only include the language codes defined in [`i18n.json`](https://github.com/lelinhtinh/jEpub/raw/master/src/i18n.json)
 - **description**: HTML string.
+
+### Set published date
+
+```typescript
+jepub.date(date: object)
+```
+
+- **date**: Date Object.
 
 ### Set identifier
 
