@@ -35,6 +35,10 @@ export default class jEpub {
         this._Pages = [];
     }
 
+    static html2text(html) {
+        return utils.html2text(html);
+    }
+
     uuid(id) {
         if (utils.isEmpty(id)) {
             throw 'UUID value is empty';
