@@ -20,3 +20,12 @@ trim_trailing_whitespace = false
 
 [mimetype]
 insert_final_newline = false
+
+[*.xml]
+insert_final_newline = false
+
+[*.ejs]
+insert_final_newline = false
+
+[*.css]
+insert_final_newline = false
