@@ -103,54 +103,15 @@ export default class jEpub {
     generate(type = 'blob') {
         const zip = new JSZip();
 
-        let metaInf = zip.folder('META-INF'),
-            oebps = zip.folder('OEBPS');
-
         if (!JSZip.support[type]) throw `This browser does not support ${type}`;
-
         if (!language[this._Info.i18n]) throw `Unknown Language: ${this._Info.i18n}`;
         const i18n = language[this._Info.i18n];
 
-        metaInf.file('container.xml', container);
+        zip.file('mimetype', mime);
 
-        if (this._Cover) {
-            oebps.file('cover-image.jpg', this._Cover);
-            oebps.file('front-cover.html', ejs.render(cover, {
-                i18n: i18n
-            }));
-        }
+        zip.file('META-INF/container.xml', container);
 
-        oebps.file('jackson.css', style);
-
-        oebps.file('notes.html', ejs.render(notes, {
-            i18n: i18n,
-            notes: utils.parseDOM(this._Notes)
-        }));
-
-        this._Pages.forEach((item, index) => {
-            let content = item.content;
-            if (!Array.isArray(content)) content = utils.parseDOM(content);
-
-            oebps.file(`page-${index}.html`, ejs.render(page, {
-                i18n: i18n,
-                title: item.title,
-                content: content
-            }));
-        });
-
-        oebps.file('table-of-contents.html', ejs.render(tocInBook, {
-            i18n: i18n,
-            pages: this._Pages
-        }));
-
-        oebps.file('title-page.html', ejs.render(info, {
-            i18n: i18n,
-            title: this._Info.title,
-            author: this._Info.author,
-            publisher: this._Info.publisher,
-            description: utils.parseDOM(this._Info.description),
-            tags: this._Info.tags,
-        }));
+        let oebps = zip.folder('OEBPS');
 
         zip.file('book.opf', ejs.render(bookConfig, {
             i18n: i18n,
@@ -165,7 +126,44 @@ export default class jEpub {
             pages: this._Pages
         }));
 
-        zip.file('mimetype', mime);
+        if (this._Cover) {
+            oebps.file('cover-image.jpg', this._Cover);
+            oebps.file('front-cover.html', ejs.render(cover, {
+                i18n: i18n
+            }));
+        }
+
+        oebps.file('title-page.html', ejs.render(info, {
+            i18n: i18n,
+            title: this._Info.title,
+            author: this._Info.author,
+            publisher: this._Info.publisher,
+            description: utils.parseDOM(this._Info.description),
+            tags: this._Info.tags,
+        }));
+
+        oebps.file('table-of-contents.html', ejs.render(tocInBook, {
+            i18n: i18n,
+            pages: this._Pages
+        }));
+
+        this._Pages.forEach((item, index) => {
+            let content = item.content;
+            if (!Array.isArray(content)) content = utils.parseDOM(content);
+
+            oebps.file(`page-${index}.html`, ejs.render(page, {
+                i18n: i18n,
+                title: item.title,
+                content: content
+            }));
+        });
+
+        oebps.file('notes.html', ejs.render(notes, {
+            i18n: i18n,
+            notes: utils.parseDOM(this._Notes)
+        }));
+
+        oebps.file('jackson.css', style);
 
         zip.file('toc.ncx', ejs.render(toc, {
             i18n: i18n,
