@@ -48,7 +48,8 @@ module.exports = {
             server: {
                 baseDir: ['demo', 'dist']
             },
-            files: ['demo', 'dist']
+            files: ['demo', 'dist'],
+            index: '_index.html'
         })
     ]
 };

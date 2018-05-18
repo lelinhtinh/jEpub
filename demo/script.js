@@ -1,12 +1,8 @@
-import 'https://unpkg.com/jepub/dist/jepub.min.js';
-
 /* eslint-disable no-console */
-fetch('./cover-image.jpg').then(response =>
-{
+fetch('./cover-image.jpg').then(response => {
     if (response.ok) return response.arrayBuffer();
     throw 'Network response was not ok.';
-}).then(buffer =>
-{
+}).then(buffer => {
 
     const jepub = new jEpub({
         title: 'Lorem Ipsum',
@@ -17,6 +13,7 @@ fetch('./cover-image.jpg').then(response =>
     });
 
     jepub.uuid('https://vi.lipsum.com/');
+    jepub.date(new Date(2013, 8, 15));
 
     jepub.cover(buffer).notes('<p class="no-indent">Dịch sang Tiếng Việt bởi <strong>Đỗ Việt</strong> - www.doviet.net</p>');
 
