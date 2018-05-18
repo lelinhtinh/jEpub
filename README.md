@@ -92,6 +92,17 @@ jepub.generate(type = 'blob')
 
 - **type**: Possible values `blob` (*default*), `base64`, `binarystring`, `array`, `uint8array`, `arraybuffer`, `nodebuffer` (*NodeJS*).
 
+### Extra public methods `+`
+
+#### Convert HTML to text
+
+```typescript
+jEpub.html2text(html: string, noBr = false)
+```
+
+- **html**: HTML string.
+- **noBr**: Boolean. Add line break after Block-level elements.
+
 ## Development
 
 ```bash
