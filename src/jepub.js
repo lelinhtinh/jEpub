@@ -40,16 +40,16 @@ export default class jEpub {
         this._Pages = [];
     }
 
-    static html2text(html) {
-        return utils.html2text(html);
+    static html2text(html, noBr = false) {
+        return utils.html2text(html, noBr);
     }
 
     date(date) {
         if (date instanceof Date) {
-            throw 'Date value is not valid';
-        } else {
             this._Date = utils.getISODate(date);
             return this;
+        } else {
+            throw 'Date object is not valid';            
         }
     }
 
