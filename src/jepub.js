@@ -46,7 +46,7 @@ export default class jEpub {
 
     date(date) {
         if (date instanceof Date) {
-            throw 'UUID value is empty';
+            throw 'Date value is not valid';
         } else {
             this._Date = utils.getISODate(date);
             return this;
