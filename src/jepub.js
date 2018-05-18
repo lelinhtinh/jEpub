@@ -49,7 +49,7 @@ export default class jEpub {
             this._Date = utils.getISODate(date);
             return this;
         } else {
-            throw 'Date object is not valid';            
+            throw 'Date object is not valid';
         }
     }
 
