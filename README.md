@@ -92,7 +92,7 @@ jepub.generate(type = 'blob')
 
 - **type**: Possible values `blob` (*default*), `base64`, `binarystring`, `array`, `uint8array`, `arraybuffer`, `nodebuffer` (*NodeJS*).
 
-### Extra public methods `+`
+### Static methods `+`
 
 #### Convert HTML to text
 
