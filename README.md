@@ -123,14 +123,13 @@ Fix [**Markdown All in One `#41`**](https://github.com/neilsustc/vscode-markdown
 
 ```json
 {
-  "key": "shift+backspace",
-  "command": "markdown.extension.onBackspaceKey",
-  "when": "editorTextFocus && !editorHasSelection && !suggestWidgetVisible && editorLangId == 'markdown'"
+    "key": "backspace",
+    "command": "-markdown.extension.onBackspaceKey"
 },
 {
-  "key": "backspace",
-  "command": "-markdown.extension.onBackspaceKey",
-  "when": "editorTextFocus && !editorHasSelection && !suggestWidgetVisible && editorLangId == 'markdown'"
+    "key": "alt+backspace",
+    "command": "markdown.extension.onBackspaceKey",
+    "when": "editorTextFocus && !editorReadonly && !suggestWidgetVisible && editorLangId == 'markdown'"
 }
 ```
 
