@@ -45,7 +45,9 @@
         <% pages.forEach(function(page, index) { %>
             <itemref idref="page-<%= index %>" linear="yes" />
         <% }); %>
-        <itemref idref="notes" linear="yes" />
+        <% if (notes) { %>
+            <itemref idref="notes" linear="yes" />
+        <% } %>
 	</spine>
 
 	<guide>

@@ -38,5 +38,13 @@
                 <content src="OEBPS/page-<%= index %>.html" />
             </navPoint>
         <% }); %>
+        <% if (notes) { %>
+            <navPoint id="notes-page" playOrder="2">
+                <navLabel>
+                    <text><%= i18n.note %></text>
+                </navLabel>
+                <content src="OEBPS/notes.html" />
+            </navPoint>
+        <% } %>
 	</navMap>
 </ncx>

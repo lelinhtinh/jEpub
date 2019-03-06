@@ -123,7 +123,8 @@ export default class jEpub {
             description: utils.html2text(this._Info.description, true),
             tags: this._Info.tags,
             cover: this._Cover,
-            pages: this._Pages
+            pages: this._Pages,
+            notes: this._Notes
         }));
 
         if (this._Cover) {
@@ -158,10 +159,12 @@ export default class jEpub {
             }));
         });
 
-        oebps.file('notes.html', ejs.render(notes, {
-            i18n: i18n,
-            notes: utils.parseDOM(this._Notes)
-        }));
+        if (this._Notes) {
+            oebps.file('notes.html', ejs.render(notes, {
+                i18n: i18n,
+                notes: utils.parseDOM(this._Notes)
+            }));
+        }
 
         oebps.file('jackson.css', style);
 
@@ -170,7 +173,8 @@ export default class jEpub {
             uuid: this._Uuid,
             title: this._Info.title,
             author: this._Info.author,
-            pages: this._Pages
+            pages: this._Pages,
+            notes: this._Notes
         }));
 
         return zip.generateAsync({
