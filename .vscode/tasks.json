@@ -3,7 +3,6 @@
   "tasks": [
     {
       "label": "Development",
-      "auto": true,
       "type": "npm",
       "script": "start",
       "problemMatcher": []

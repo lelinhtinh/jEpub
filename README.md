@@ -109,8 +109,6 @@ jEpub.html2text(html: string, noBr = false)
 npm start
 ```
 
-This command can be executed automatically if you use **VSCode**, which is implemented by [AutoLaunch extension](https://github.com/lelinhtinh/jEpub/blob/master/.vscode/extensions.json#L15) and configured in [Development task](https://github.com/lelinhtinh/jEpub/blob/master/.vscode/tasks.json#L6).
-
 Builds are concatenated and minified using [Webpack](https://webpack.js.org/) and [Babel](https://babeljs.io/).
 
 ```bash
