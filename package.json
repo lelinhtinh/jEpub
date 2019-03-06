@@ -1,6 +1,6 @@
 {
   "name": "jepub",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "description": "Generate simple EPUB books with JavaScript.",
   "main": "src/jepub.js",
   "scripts": {
