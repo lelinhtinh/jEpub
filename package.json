@@ -1,12 +1,14 @@
 {
   "name": "jepub",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "description": "Generate simple EPUB books with JavaScript.",
   "main": "src/jepub.js",
   "scripts": {
     "clean": "rimraf dist",
     "postclean": "mkdirp dist",
-    "build": "webpack --config webpack.production.config.js",
+    "prebuild": "npm run clean",
+    "build": "webpack --config webpack.development.config.js",
+    "postbuild": "webpack --config webpack.production.config.js",
     "prestart": "npm run clean",
     "start": "webpack --config webpack.development.config.js --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
