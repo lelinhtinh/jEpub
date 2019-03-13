@@ -9,5 +9,25 @@
   "editor.autoIndent": false,
   "editor.wordWrap": "on",
   "workbench.editor.closeOnFileDelete": false,
-  "editor.minimap.renderCharacters": false
+  "editor.minimap.renderCharacters": false,
+  "beautify.language": {
+    "js": {
+      "type": [
+        "javascript"
+      ],
+      "filename": [],
+      "ext": [
+        "js"
+      ]
+    },
+    "css": [
+      "css"
+    ],
+    "html": [
+      "html"
+    ]
+  },
+  "beautify.config": {
+    "jslint_happy": true
+  }
 }
