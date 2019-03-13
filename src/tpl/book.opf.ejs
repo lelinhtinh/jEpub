@@ -34,6 +34,9 @@
         <% } %>
 		<item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml" />
 		<item id="stylesheet" href="OEBPS/jackson.css" media-type="text/css" />
+        <% Object.keys(images).forEach(name => { %>
+            <item id="<%= name %>" href="OEBPS/<%= images[name].path %>" media-type="<%= images[name].type %>" />
+        <% }); %>
 	</manifest>
 
 	<spine toc="ncx">
