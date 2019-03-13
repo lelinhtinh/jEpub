@@ -25,21 +25,38 @@ or:
 <script src="https://cdn.jsdelivr.net/npm/jepub/dist/jepub.min.js"></script>
 ```
 
+## Dependencies
+
+jEpub requires [JSZip](https://github.com/Stuk/jszip) and [EJS](https://github.com/mde/ejs). Make sure these libraries are loaded before starting your code.
+
+```html
+<script src="jszip.js"></script>
+<script src="ejs.js"></script>
+<script src="jepub.js"></script>
+<script>
+    const jepub = new jEpub()
+    // jepub.init({
+    // do something
+</script>
+```
+
 ## Usage
 
 ```typescript
-const jepub = new jEpub({
+const jepub = new jEpub()
+jepub.init({
     i18n: 'en', // Internationalization
     title: 'Book title',
     author: 'Book author',
     publisher: 'Book publisher',
     description: '<b>Book</b> description', // optional
     tags: [ 'epub', 'tag' ] // optional
-});
+})
 ```
 
-- **i18n** only include the language codes defined in [`i18n.json`](https://github.com/lelinhtinh/jEpub/raw/master/src/i18n.json)
+- **i18n** only include the language codes defined in [`i18n.json`](https://github.com/lelinhtinh/jEpub/blob/master/src/i18n.json)
 - **description**: HTML string.
+- **tags**: Array.
 
 ### Set published date
 
@@ -55,15 +72,15 @@ jepub.date(date: object)
 jepub.uuid(id: string | number)
 ```
 
-- **id** is unique.
+- **id**: Unique id.
 
 ### Add cover
 
 ```typescript
-jepub.cover(buffer: object)
+jepub.cover(blob: object)
 ```
 
-- **buffer**: ArrayBuffer Object from XMLHttpRequest.
+- **blob**: Blob Object from XMLHttpRequest.
 
 ### Add notes
 
@@ -84,13 +101,22 @@ jepub.add(title: string, content: string | array)
   - `string`: HTML string.
   - `array`: Plain text for each item.
 
+### Add image
+
+```typescript
+jepub.image(blob: object, IMG_ID: string)
+```
+
+- **blob**: Blob Object from XMLHttpRequest.
+- **IMG_ID**: Unique id.
+
+Place `<%= image[IMG_ID] %>` inside the chapter's content *(HTML string only)*, where you want to display it.
+
 ### Generate EPUB `*`
 
 ```typescript
-jepub.generate(type = 'blob')
+jepub.generate()
 ```
-
-- **type**: Possible values `blob` (*default*), `base64`, `binarystring`, `array`, `uint8array`, `arraybuffer`, `nodebuffer` (*NodeJS*).
 
 ### Static methods `+`
 
@@ -114,24 +140,6 @@ Builds are concatenated and minified using [Webpack](https://webpack.js.org/) an
 ```bash
 npm run build
 ```
-
-### VSCode
-
-Fix [**Markdown All in One `#41`**](https://github.com/neilsustc/vscode-markdown/issues/41): Add to `keybindings.json`
-
-```json
-{
-    "key": "backspace",
-    "command": "-markdown.extension.onBackspaceKey"
-},
-{
-    "key": "alt+backspace",
-    "command": "markdown.extension.onBackspaceKey",
-    "when": "editorTextFocus && !editorReadonly && !suggestWidgetVisible && editorLangId == 'markdown'"
-}
-```
-
-Start **Chrome** with the `--remote-debugging-port=9222` flag when debugging in the [`attach`](https://github.com/Microsoft/vscode-chrome-debug#attach) mode.
 
 ## License
 
