@@ -46,7 +46,7 @@ module.exports = {
             host: 'localhost',
             port: 3333,
             server: {
-                baseDir: ['demo', 'dist']
+                baseDir: ['demo', 'dist', 'node_modules/jszip/dist', 'node_modules/ejs']
             },
             files: ['demo', 'dist'],
             index: '_index.html'

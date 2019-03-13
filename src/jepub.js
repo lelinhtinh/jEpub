@@ -1,8 +1,5 @@
 'use strict';
 
-import JSZip from 'jszip';
-import ejs from 'ejs';
-
 import * as utils from './utils';
 
 import language from './i18n.json';
