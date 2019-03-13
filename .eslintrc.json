@@ -4,13 +4,16 @@
     "ecmaFeatures": {
       "globalReturn": true,
       "impliedStrict": true
-    }
+    },
+    "ecmaVersion": 2017
   },
   "env": {
     "browser": true,
     "es6": true
   },
   "globals": {
+    "JSZip": false,
+    "ejs": false,
     "jEpub": false
   },
   "extends": "eslint:recommended",
