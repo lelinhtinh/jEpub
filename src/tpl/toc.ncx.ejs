@@ -30,10 +30,10 @@
 			</navLabel>
 			<content src="OEBPS/table-of-contents.html" />
 		</navPoint>
-        <% pages.forEach(function(page, index) { %>
+        <% pages.forEach((title, index) => { %>
             <navPoint id="page-<%= index %>" playOrder="<%= (index + 3) %>">
                 <navLabel>
-                    <text><%= page.title %></text>
+                    <text><%= title %></text>
                 </navLabel>
                 <content src="OEBPS/page-<%= index %>.html" />
             </navPoint>

@@ -14,7 +14,7 @@
         <% if (cover) { %>
 		    <meta name="cover" content="cover-image" />
         <% } %>
-        <% if (Array.isArray(tags) && tags.length) tags.forEach(function(tag) { %>
+        <% if (Array.isArray(tags) && tags.length) tags.forEach(tag => { %>
             <dc:subject><%= tag %></dc:subject>
         <% }); %>
 	</metadata>
@@ -26,11 +26,11 @@
 		<item id="title-page" href="OEBPS/title-page.html" media-type="application/xhtml+xml" />
 		<item id="notes" href="OEBPS/notes.html" media-type="application/xhtml+xml" />
 		<item id="table-of-contents" href="OEBPS/table-of-contents.html" media-type="application/xhtml+xml" />
-        <% pages.forEach(function(page, index) { %>
+        <% pages.forEach((page, index) => { %>
             <item id="page-<%= index %>" href="OEBPS/page-<%= index %>.html" media-type="application/xhtml+xml" />
         <% }); %>
         <% if (cover) { %>
-		    <item id="cover-image" href="OEBPS/cover-image.jpg" media-type="image/jpeg" />
+		    <item id="cover-image" href="<%= cover.path %>" media-type="<%= cover.type %>" />
         <% } %>
 		<item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml" />
 		<item id="stylesheet" href="OEBPS/jackson.css" media-type="text/css" />
@@ -45,7 +45,7 @@
         <% } %>
 		<itemref idref="title-page" linear="yes" />
 		<itemref idref="table-of-contents" linear="yes" />
-        <% pages.forEach(function(page, index) { %>
+        <% pages.forEach((page, index) => { %>
             <itemref idref="page-<%= index %>" linear="yes" />
         <% }); %>
         <% if (notes) { %>
