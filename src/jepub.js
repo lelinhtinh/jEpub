@@ -74,6 +74,22 @@ export default class jEpub {
         }
     }
 
+    image(data, name) {
+        if (data instanceof Blob) {
+            const ext = utils.mime2ext(data.type);
+            if (!ext) throw 'Image data is not allowed';
+            const filePath = `assets/${name}.${ext}`;
+            this._Images[name] = {
+                type: data.type,
+                path: filePath
+            };
+            this._Zip.file(`OEBPS/${filePath}`, data);
+            return this;
+        } else {
+            throw 'Image data is not valid';
+        }
+    }
+
     notes(content) {
         if (utils.isEmpty(content)) {
             throw 'Notes is empty';
