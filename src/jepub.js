@@ -63,6 +63,8 @@ export default class jEpub {
         }, {
             client: true
         }));
+
+        return this;
     }
 
     static html2text(html, noBr = false) {
