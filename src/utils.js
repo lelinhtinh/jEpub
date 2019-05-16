@@ -84,14 +84,24 @@ export function mime2ext(mime) {
     case 'image/gif':
         ext = 'gif';
         break;
+    case 'image/apng':
+        ext = 'apng';
+        break;
+    case 'image/jpg':
     case 'image/jpeg':
         ext = 'jpg';
         break;
     case 'image/png':
         ext = 'png';
         break;
+    case 'image/webp':
+        ext = 'webp';
+        break;
     case 'image/svg+xml':
         ext = 'svg';
+        break;
+    case 'image/bmp':
+        ext = 'bmp';
         break;
     default:
         ext = null;
