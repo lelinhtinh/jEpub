@@ -1,6 +1,7 @@
 'use strict';
 
 import * as utils from './utils';
+import imageType from 'image-type';
 
 import language from './i18n.json';
 
@@ -94,40 +95,50 @@ export default class jEpub {
     }
 
     cover(data) {
+        let ext;
         if (data instanceof Blob) {
-            const ext = utils.mime2ext(data.type);
-            if (!ext) throw 'Image data is not allowed';
-            this._Cover = {
-                type: data.type,
-                path: `OEBPS/cover-image.${ext}`
-            };
-            this._Zip.file(this._Cover.path, data);
-            this._Zip.file('OEBPS/front-cover.html', ejs.render(cover, {
-                i18n: this._I18n,
-                cover: this._Cover
-            }, {
-                client: true
-            }));
-            return this;
+            ext = utils.mime2ext(data.type);
+        } else if (data instanceof ArrayBuffer) {
+            ext = imageType(new Uint8Array(data));
+            if (ext) ext = utils.mime2ext(ext.mime);
         } else {
             throw 'Cover data is not valid';
         }
+        if (!ext) throw 'Cover data is not allowed';
+
+        this._Cover = {
+            type: data.type,
+            path: `OEBPS/cover-image.${ext}`
+        };
+        this._Zip.file(this._Cover.path, data);
+        this._Zip.file('OEBPS/front-cover.html', ejs.render(cover, {
+            i18n: this._I18n,
+            cover: this._Cover
+        }, {
+            client: true
+        }));
+        return this;
     }
 
     image(data, name) {
+        let ext;
         if (data instanceof Blob) {
-            const ext = utils.mime2ext(data.type);
-            if (!ext) throw 'Image data is not allowed';
-            const filePath = `assets/${name}.${ext}`;
-            this._Images[name] = {
-                type: data.type,
-                path: filePath
-            };
-            this._Zip.file(`OEBPS/${filePath}`, data);
-            return this;
+            ext = utils.mime2ext(data.type);
+        } else if (data instanceof ArrayBuffer) {
+            ext = imageType(new Uint8Array(data));
+            if (ext) ext = utils.mime2ext(ext.mime);
         } else {
             throw 'Image data is not valid';
         }
+        if (!ext) throw 'Image data is not allowed';
+
+        const filePath = `assets/${name}.${ext}`;
+        this._Images[name] = {
+            type: data.type,
+            path: filePath
+        };
+        this._Zip.file(`OEBPS/${filePath}`, data);
+        return this;
     }
 
     notes(content) {

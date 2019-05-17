@@ -77,10 +77,10 @@ jepub.uuid(id: string | number)
 ### Add cover
 
 ```typescript
-jepub.cover(blob: object)
+jepub.cover(data: object)
 ```
 
-- **blob**: Blob Object from XMLHttpRequest.
+- **data**: A Blob or an ArrayBuffer object from XMLHttpRequest.
 
 ### Add notes
 
@@ -104,10 +104,10 @@ jepub.add(title: string, content: string | array)
 ### Add image
 
 ```typescript
-jepub.image(blob: object, IMG_ID: string)
+jepub.image(data: object, IMG_ID: string)
 ```
 
-- **blob**: Blob Object from XMLHttpRequest.
+- **data**: A Blob or an ArrayBuffer object from XMLHttpRequest.
 - **IMG_ID**: Unique id.
 
 Place `<%= image[IMG_ID] %>` inside the chapter's content *(HTML string only)*, where you want to display it.

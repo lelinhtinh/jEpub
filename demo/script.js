@@ -2,7 +2,7 @@
 (async () => {
 
     const cover = await fetch('./cover-image.jpg').then(response => {
-        if (response.ok) return response.blob();
+        if (response.ok) return response.arrayBuffer();
         throw 'Network response was not ok.';
     });
 
