@@ -101,8 +101,10 @@ export default class jEpub {
             ext = utils.mime2ext(mime);
         } else if (data instanceof ArrayBuffer) {
             ext = imageType(new Uint8Array(data));
-            mime = ext.mime;
-            if (ext) ext = utils.mime2ext(mime);
+            if (ext) {
+                mime = ext.mime;
+                ext = utils.mime2ext(mime);
+            }
         } else {
             throw 'Cover data is not valid';
         }
