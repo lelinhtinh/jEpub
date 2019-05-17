@@ -1,6 +1,6 @@
 {
   "name": "jepub",
-  "version": "2.0.1",
+  "version": "2.1.0",
   "description": "Generate simple EPUB books with JavaScript.",
   "main": "src/jepub.js",
   "scripts": {
@@ -34,9 +34,10 @@
   "bugs": {
     "url": "https://github.com/lelinhtinh/jEpub/issues"
   },
-  "homepage": "https://github.com/lelinhtinh/jEpub#readme",
+  "homepage": "https://lelinhtinh.github.io/jEpub/",
   "dependencies": {
     "ejs": "^2.6.1",
+    "image-type": "^4.1.0",
     "jszip": "^3.2.1"
   },
   "devDependencies": {
