@@ -95,19 +95,21 @@ export default class jEpub {
     }
 
     cover(data) {
-        let ext;
+        let ext, mime;
         if (data instanceof Blob) {
-            ext = utils.mime2ext(data.type);
+            mime = data.type;
+            ext = utils.mime2ext(mime);
         } else if (data instanceof ArrayBuffer) {
             ext = imageType(new Uint8Array(data));
-            if (ext) ext = utils.mime2ext(ext.mime);
+            mime = ext.mime;
+            if (ext) ext = utils.mime2ext(mime);
         } else {
             throw 'Cover data is not valid';
         }
         if (!ext) throw 'Cover data is not allowed';
 
         this._Cover = {
-            type: data.type,
+            type: mime,
             path: `OEBPS/cover-image.${ext}`
         };
         this._Zip.file(this._Cover.path, data);
@@ -121,12 +123,14 @@ export default class jEpub {
     }
 
     image(data, name) {
-        let ext;
+        let ext, mime;
         if (data instanceof Blob) {
-            ext = utils.mime2ext(data.type);
+            mime = data.type;
+            ext = utils.mime2ext(mime);
         } else if (data instanceof ArrayBuffer) {
             ext = imageType(new Uint8Array(data));
-            if (ext) ext = utils.mime2ext(ext.mime);
+            mime = ext.mime;
+            if (ext) ext = utils.mime2ext(mime);
         } else {
             throw 'Image data is not valid';
         }
@@ -134,7 +138,7 @@ export default class jEpub {
 
         const filePath = `assets/${name}.${ext}`;
         this._Images[name] = {
-            type: data.type,
+            type: mime,
             path: filePath
         };
         this._Zip.file(`OEBPS/${filePath}`, data);
