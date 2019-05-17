@@ -115,8 +115,10 @@ Place `<%= image[IMG_ID] %>` inside the chapter's content *(HTML string only)*, 
 ### Generate EPUB `*`
 
 ```typescript
-jepub.generate()
+jepub.generate(type = 'blob')
 ```
+
+- **type**: The type of EPUB to return. See [JSZip type option](https://stuk.github.io/jszip/documentation/api_jszip/generate_async.html#type-option).
 
 ### Static methods `+`
 

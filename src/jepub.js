@@ -30,8 +30,6 @@ export default class jEpub {
     }
 
     init(details) {
-        if (!JSZip.support.blob) throw 'This browser does not support Blob';
-
         this._Info = Object.assign({}, {
             i18n: 'vi',
             title: 'undefined',
@@ -175,7 +173,9 @@ export default class jEpub {
         }
     }
 
-    generate() {
+    generate(type = 'blob') {
+        if (!JSZip.support[type]) throw `This browser does not support ${type}`;
+
         let notes = this._Zip.file('OEBPS/notes.html');
         notes = !notes ? false : true;
 
@@ -215,7 +215,7 @@ export default class jEpub {
         }));
 
         return this._Zip.generateAsync({
-            type: 'blob',
+            type: type,
             mimeType: mime,
             compression: 'DEFLATE',
             compressionOptions: {
