@@ -1,4 +1,6 @@
 # jEpub
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Flelinhtinh%2FjEpub.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2Flelinhtinh%2FjEpub?ref=badge_shield)
+
 
 EPUB Generator, using templates from [Pressbooks](https://pressbooks.com/), because it works perfectly with my old Lumia （。＞ω＜）。
 
@@ -146,3 +148,6 @@ npm run build
 ## License
 
 ISC. Copyright 2018 [lelinhtinh](https://github.com/lelinhtinh)
+
+
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Flelinhtinh%2FjEpub.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Flelinhtinh%2FjEpub?ref=badge_large)
