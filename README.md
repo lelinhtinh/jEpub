@@ -150,5 +150,4 @@ npm run build
 
 [ISC](./LICENSE). Copyright 2018 [lelinhtinh](https://github.com/lelinhtinh)
 
-
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Flelinhtinh%2FjEpub.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Flelinhtinh%2FjEpub?ref=badge_large)
