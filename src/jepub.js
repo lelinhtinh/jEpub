@@ -7,7 +7,6 @@ import language from './i18n.json';
 
 import container from './tpl/META-INF/container.xml';
 import cover from './tpl/OEBPS/front-cover.html';
-import style from './tpl/OEBPS/jackson.css';
 import notes from './tpl/OEBPS/notes.html';
 import page from './tpl/OEBPS/page.html';
 import tocInBook from './tpl/OEBPS/table-of-contents.html';
@@ -51,7 +50,6 @@ export default class jEpub {
         this._Zip = new JSZip();
         this._Zip.file('mimetype', mime);
         this._Zip.file('META-INF/container.xml', container);
-        this._Zip.file('OEBPS/jackson.css', style);
         this._Zip.file('OEBPS/title-page.html', ejs.render(info, {
             i18n: this._I18n,
             title: this._Info.title,
