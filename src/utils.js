@@ -11,6 +11,16 @@ export function uuidv4() {
 }
 
 /**
+ * Checks if a value is object
+ * @see https://stackoverflow.com/a/14706877
+ * @returns {boolean}
+ */
+export function isObject(obj) {
+    const type = typeof obj;
+    return type === 'function' || type === 'object' && !!obj;
+}
+
+/**
  * Checks if a value is empty
  * @returns {boolean}
  */
