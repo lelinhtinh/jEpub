@@ -17,8 +17,6 @@ export function uuidv4() {
 export function isEmpty(val) {
     if (val === null) {
         return true;
-    } else if (typeof val === 'number') {
-        return false;
     } else if (typeof val === 'string') {
         return !val.trim();
     }
