@@ -96,13 +96,14 @@ jepub.notes(content: string)
 ### Add chapter `*`
 
 ```typescript
-jepub.add(title: string, content: string | array)
+jepub.add(title: string, content: string | array, index?:number)
 ```
 
 - **title**: Plain text.
 - **content**:
   - `string`: HTML string.
   - `array`: Plain text for each item.
+- **index**: Item index.
 
 ### Add image
 

@@ -159,7 +159,7 @@ export default class jEpub {
         }
     }
 
-    add(title, content) {
+    add(title, content, index = this._Pages.length) {
         if (utils.isEmpty(title)) {
             throw 'Title is empty';
         } else if (utils.isEmpty(content)) {
@@ -176,14 +176,14 @@ export default class jEpub {
                 });
                 content = utils.parseDOM(content);
             }
-            this._Zip.file(`OEBPS/page-${this._Pages.length}.html`, ejs.render(page, {
+            this._Zip.file(`OEBPS/page-${index}.html`, ejs.render(page, {
                 i18n: this._I18n,
                 title: title,
                 content: content
             }, {
                 client: true
             }));
-            this._Pages.push(title);
+            this._Pages[index] = title;
             return this;
         }
     }
