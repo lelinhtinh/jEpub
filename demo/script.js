@@ -1,3 +1,6 @@
+/* cSpell:disable */
+/* spell-checker: disable */
+/* spellchecker: disable */
 /* eslint-disable no-console */
 (async () => {
 

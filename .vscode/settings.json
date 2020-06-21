@@ -29,5 +29,20 @@
   },
   "beautify.config": {
     "jslint_happy": true
-  }
+  },
+  "cSpell.words": [
+    "Epub",
+    "NISO",
+    "OEBPS",
+    "apng",
+    "devtool",
+    "dtbncx",
+    "idref",
+    "jepub",
+    "jsfiddle",
+    "jszip",
+    "lelinhtinh",
+    "uffff",
+    "uuidv"
+  ]
 }
