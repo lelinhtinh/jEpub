@@ -195,7 +195,7 @@ export default class jEpub {
         }
     }
 
-    generate(type = 'blob') {
+    generate(type = 'blob', onUpdate) {
         if (!JSZip.support[type]) throw `This browser does not support ${type}`;
 
         let notes = this._Zip.file('OEBPS/notes.html');
@@ -243,6 +243,6 @@ export default class jEpub {
             compressionOptions: {
                 level: 9
             }
-        });
+        }, onUpdate);
     }
 }
