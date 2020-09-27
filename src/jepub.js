@@ -30,18 +30,25 @@ export default class jEpub {
     }
 
     init(details) {
+        if (details instanceof JSZip) {
+            this._Zip = details;
+            return this;
+        }
+
         this._Info = Object.assign({}, {
-            i18n: 'vi',
+            i18n: 'en',
             title: 'undefined',
             author: 'undefined',
             publisher: 'undefined',
             description: '',
             tags: []
         }, details);
+
         this._Uuid = {
             scheme: 'uuid',
             id: utils.uuidv4()
         };
+
         this._Date = utils.getISODate();
 
         if (!language[this._Info.i18n]) throw `Unknown Language: ${this._Info.i18n}`;

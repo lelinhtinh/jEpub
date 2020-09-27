@@ -1,6 +1,6 @@
 /**
  * Generates a UUID
- * based on: https://stackoverflow.com/a/2117523
+ * @see https://stackoverflow.com/a/2117523
  * @returns {string} uuid
  */
 
@@ -75,7 +75,7 @@ export function html2text(html, noBr = false) {
 }
 
 /**
- * https://gist.github.com/dperini/729294
+ * @see https://gist.github.com/dperini/729294
  * @param {String} value
  */
 export function validateUrl(value) {
@@ -89,27 +89,19 @@ export function validateUrl(value) {
 export function mime2ext(mime) {
     let ext = null;
     switch (mime) {
-    case 'image/gif':
-        ext = 'gif';
-        break;
-    case 'image/apng':
-        ext = 'apng';
-        break;
     case 'image/jpg':
     case 'image/jpeg':
         ext = 'jpg';
         break;
-    case 'image/png':
-        ext = 'png';
-        break;
-    case 'image/webp':
-        ext = 'webp';
-        break;
     case 'image/svg+xml':
         ext = 'svg';
         break;
+    case 'image/gif':
+    case 'image/apng':
+    case 'image/png':
+    case 'image/webp':
     case 'image/bmp':
-        ext = 'bmp';
+        ext = mime.split('/')[1];
         break;
     default:
         ext = null;
