@@ -2,7 +2,7 @@
   "name": "jepub",
   "version": "2.1.4",
   "description": "Generate simple EPUB books with JavaScript.",
-  "main": "src/jepub.js",
+  "main": "dist/jepub.js",
   "scripts": {
     "clean": "rimraf dist",
     "postclean": "mkdirp dist",
