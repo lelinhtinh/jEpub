@@ -30,7 +30,7 @@
             <item id="page-<%= index %>" href="OEBPS/page-<%= index %>.html" media-type="application/xhtml+xml" />
         <% }); %>
         <% if (cover) { %>
-		    <item id="cover-image" href="<%= cover.path %>" media-type="<%= cover.type %>" />
+		    <item id="cover-image" href="<%= cover.path %>" media-type="<%= cover.type %>" properties="cover-image" />
         <% } %>
 		<item id="ncx" href="toc.ncx" media-type="application/x-dtbncx+xml" />
         <% Object.keys(images).forEach(name => { %>

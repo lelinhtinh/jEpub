@@ -109,3 +109,16 @@ export function mime2ext(mime) {
     }
     return ext;
 }
+
+// TODO: kepub
+// Wrap text, image <span class="koboSpan" id="kobo.{para:số thứ tự đoạn văn, bắt đầu bằng 1}.{seg: số thứ tự cụm bị wrap, bắt đầu bằng 1}">text</span>
+// https://github.com/pgaskin/kepubify/blob/871aa0bb2047b5ba171bc608024bdb180cb29d70/kepub/transform.go#L173
+
+//UnescapeString
+// var htmlEscaper = strings.NewReplacer(
+// 	`&`, "&amp;",
+// 	`'`, "&#39;", // "&#39;" is shorter than "&apos;" and apos was not in HTML until HTML5.
+// 	`<`, "&lt;",
+// 	`>`, "&gt;",
+// 	`"`, "&#34;", // "&#34;" is shorter than "&quot;".
+// )
