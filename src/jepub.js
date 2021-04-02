@@ -30,18 +30,25 @@ export default class jEpub {
     }
 
     init(details) {
+        if (details instanceof JSZip) {
+            this._Zip = details;
+            return this;
+        }
+
         this._Info = Object.assign({}, {
-            i18n: 'vi',
+            i18n: 'en',
             title: 'undefined',
             author: 'undefined',
             publisher: 'undefined',
             description: '',
             tags: []
         }, details);
+
         this._Uuid = {
             scheme: 'uuid',
             id: utils.uuidv4()
         };
+
         this._Date = utils.getISODate();
 
         if (!language[this._Info.i18n]) throw `Unknown Language: ${this._Info.i18n}`;
@@ -159,7 +166,7 @@ export default class jEpub {
         }
     }
 
-    add(title, content) {
+    add(title, content, index = this._Pages.length) {
         if (utils.isEmpty(title)) {
             throw 'Title is empty';
         } else if (utils.isEmpty(content)) {
@@ -176,14 +183,14 @@ export default class jEpub {
                 });
                 content = utils.parseDOM(content);
             }
-            this._Zip.file(`OEBPS/page-${this._Pages.length}.html`, ejs.render(page, {
+            this._Zip.file(`OEBPS/page-${index}.html`, ejs.render(page, {
                 i18n: this._I18n,
                 title: title,
                 content: content
             }, {
                 client: true
             }));
-            this._Pages.push(title);
+            this._Pages[index] = title;
             return this;
         }
     }
