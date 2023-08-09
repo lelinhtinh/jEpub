@@ -8,9 +8,6 @@ const banner = `${PACKAGE.name} - ${PACKAGE.version} | (c) 2018 ${PACKAGE.author
 module.exports = {
     mode: 'production',
     target: 'web',
-    node: {
-        fs: 'empty'
-    },
     entry: './src/jepub.js',
     output: {
         path: path.resolve(__dirname, 'dist'),
@@ -20,7 +17,10 @@ module.exports = {
         umdNamedDefine: true
     },
     resolve: {
-        extensions: ['.js', '.ejs']
+        extensions: ['.js', '.ejs'],
+        fallback: {
+          fs: false
+        }
     },
     module: {
         rules: [
