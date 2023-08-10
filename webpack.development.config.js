@@ -5,9 +5,6 @@ const BrowserSyncPlugin = require('browser-sync-webpack-plugin');
 module.exports = {
     mode: 'development',
     target: 'web',
-    node: {
-        fs: 'empty'
-    },
     entry: './src/jepub.js',
     output: {
         path: path.resolve(__dirname, 'dist'),
@@ -17,7 +14,10 @@ module.exports = {
         umdNamedDefine: true
     },
     resolve: {
-        extensions: ['.js', '.ejs']
+        extensions: ['.js', '.ejs'],
+        fallback: {
+          fs: false
+        }
     },
     devtool: 'source-map',
     module: {

@@ -5,15 +5,15 @@ import imageType from 'image-type';
 
 import language from './i18n.json';
 
-import container from './tpl/META-INF/container.xml';
-import cover from './tpl/OEBPS/front-cover.html';
-import notes from './tpl/OEBPS/notes.html';
-import page from './tpl/OEBPS/page.html';
-import tocInBook from './tpl/OEBPS/table-of-contents.html';
-import info from './tpl/OEBPS/title-page.html';
-import bookConfig from './tpl/book.opf';
-import mime from './tpl/mimetype';
-import toc from './tpl/toc.ncx';
+import container from './tpl/epub/META-INF/container.xml';
+import cover from './tpl/epub/OEBPS/front-cover.html';
+import notes from './tpl/epub/OEBPS/notes.html';
+import page from './tpl/epub/OEBPS/page.html';
+import tocInBook from './tpl/epub/OEBPS/table-of-contents.html';
+import info from './tpl/epub/OEBPS/title-page.html';
+import bookConfig from './tpl/epub/book.opf';
+import mime from './tpl/epub/mimetype';
+import toc from './tpl/epub/toc.ncx';
 
 export default class jEpub {
     constructor() {
