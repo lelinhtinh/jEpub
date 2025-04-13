@@ -23,11 +23,18 @@ module.exports = {
     module: {
         rules: [
             {
-                test: /[^.]|\.(xml|html|css|ejs)$/,
+                test: /[^.]|\.(xml|html|css)$/,
                 include: [
                     path.resolve(__dirname, 'src/tpl')
                 ],
                 use: 'raw-loader'
+            },
+            {
+                test: /[^.]|\.ejs$/,
+                include: [
+                    path.resolve(__dirname, 'src/tpl')
+                ],
+                use: path.resolve(__dirname, 'minify-ejs.js'),
             },
             {
                 test: /\.js$/,

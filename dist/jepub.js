@@ -127,38 +127,23 @@ module.exports = _typeof;
 
 
 var _interopRequireDefault = __webpack_require__(/*! @babel/runtime/helpers/interopRequireDefault */ "./node_modules/@babel/runtime/helpers/interopRequireDefault.js");
-
 var _interopRequireWildcard = __webpack_require__(/*! @babel/runtime/helpers/interopRequireWildcard */ "./node_modules/@babel/runtime/helpers/interopRequireWildcard.js");
-
 Object.defineProperty(exports, "__esModule", ({
   value: true
 }));
 exports["default"] = void 0;
-
 var utils = _interopRequireWildcard(__webpack_require__(/*! ./utils */ "./src/utils.js"));
-
 var _imageType = _interopRequireDefault(__webpack_require__(/*! image-type */ "./node_modules/image-type/index.js"));
-
 var _i18n = _interopRequireDefault(__webpack_require__(/*! ./i18n.json */ "./src/i18n.json"));
-
 var _container = _interopRequireDefault(__webpack_require__(/*! ./tpl/epub/META-INF/container.xml */ "./src/tpl/epub/META-INF/container.xml"));
-
 var _frontCover = _interopRequireDefault(__webpack_require__(/*! ./tpl/epub/OEBPS/front-cover.html */ "./src/tpl/epub/OEBPS/front-cover.html.ejs"));
-
 var _notes = _interopRequireDefault(__webpack_require__(/*! ./tpl/epub/OEBPS/notes.html */ "./src/tpl/epub/OEBPS/notes.html.ejs"));
-
 var _page = _interopRequireDefault(__webpack_require__(/*! ./tpl/epub/OEBPS/page.html */ "./src/tpl/epub/OEBPS/page.html.ejs"));
-
 var _tableOfContents = _interopRequireDefault(__webpack_require__(/*! ./tpl/epub/OEBPS/table-of-contents.html */ "./src/tpl/epub/OEBPS/table-of-contents.html.ejs"));
-
 var _titlePage = _interopRequireDefault(__webpack_require__(/*! ./tpl/epub/OEBPS/title-page.html */ "./src/tpl/epub/OEBPS/title-page.html.ejs"));
-
 var _book = _interopRequireDefault(__webpack_require__(/*! ./tpl/epub/book.opf */ "./src/tpl/epub/book.opf.ejs"));
-
 var _mimetype = _interopRequireDefault(__webpack_require__(/*! ./tpl/epub/mimetype */ "./src/tpl/epub/mimetype"));
-
 var _toc = _interopRequireDefault(__webpack_require__(/*! ./tpl/epub/toc.ncx */ "./src/tpl/epub/toc.ncx.ejs"));
-
 class jEpub {
   constructor() {
     this._I18n = {};
@@ -170,13 +155,11 @@ class jEpub {
     this._Images = [];
     this._Zip = {};
   }
-
   init(details) {
     if (details instanceof JSZip) {
       this._Zip = details;
       return this;
     }
-
     this._Info = Object.assign({}, {
       i18n: 'en',
       title: 'undefined',
@@ -193,11 +176,8 @@ class jEpub {
     if (!_i18n.default[this._Info.i18n]) throw "Unknown Language: ".concat(this._Info.i18n);
     this._I18n = _i18n.default[this._Info.i18n];
     this._Zip = new JSZip();
-
     this._Zip.file('mimetype', _mimetype.default);
-
     this._Zip.file('META-INF/container.xml', _container.default);
-
     this._Zip.file('OEBPS/title-page.html', ejs.render(_titlePage.default, {
       i18n: this._I18n,
       title: this._Info.title,
@@ -208,14 +188,11 @@ class jEpub {
     }, {
       client: true
     }));
-
     return this;
   }
-
   static html2text(html, noBr = false) {
     return utils.html2text(html, noBr);
   }
-
   date(date) {
     if (date instanceof Date) {
       this._Date = utils.getISODate(date);
@@ -224,7 +201,6 @@ class jEpub {
       throw 'Date object is not valid';
     }
   }
-
   uuid(id) {
     if (utils.isEmpty(id)) {
       throw 'UUID value is empty';
@@ -238,16 +214,13 @@ class jEpub {
       return this;
     }
   }
-
   cover(data) {
     let ext, mime;
-
     if (data instanceof Blob) {
       mime = data.type;
       ext = utils.mime2ext(mime);
     } else if (data instanceof ArrayBuffer) {
       ext = (0, _imageType.default)(new Uint8Array(data));
-
       if (ext) {
         mime = ext.mime;
         ext = utils.mime2ext(mime);
@@ -255,28 +228,22 @@ class jEpub {
     } else {
       throw 'Cover data is not valid';
     }
-
     if (!ext) throw 'Cover data is not allowed';
     this._Cover = {
       type: mime,
       path: "OEBPS/cover-image.".concat(ext)
     };
-
     this._Zip.file(this._Cover.path, data);
-
     this._Zip.file('OEBPS/front-cover.html', ejs.render(_frontCover.default, {
       i18n: this._I18n,
       cover: this._Cover
     }, {
       client: true
     }));
-
     return this;
   }
-
   image(data, name) {
     let ext, mime;
-
     if (data instanceof Blob) {
       mime = data.type;
       ext = utils.mime2ext(mime);
@@ -287,19 +254,15 @@ class jEpub {
     } else {
       throw 'Image data is not valid';
     }
-
     if (!ext) throw 'Image data is not allowed';
     const filePath = "assets/".concat(name, ".").concat(ext);
     this._Images[name] = {
       type: mime,
       path: filePath
     };
-
     this._Zip.file("OEBPS/".concat(filePath), data);
-
     return this;
   }
-
   notes(content) {
     if (utils.isEmpty(content)) {
       throw 'Notes is empty';
@@ -310,11 +273,9 @@ class jEpub {
       }, {
         client: true
       }));
-
       return this;
     }
   }
-
   add(title, content, index = this._Pages.length) {
     if (utils.isEmpty(title)) {
       throw 'Title is empty';
@@ -332,7 +293,6 @@ class jEpub {
         });
         content = utils.parseDOM(content);
       }
-
       this._Zip.file("OEBPS/page-".concat(index, ".html"), ejs.render(_page.default, {
         i18n: this._I18n,
         title: title,
@@ -340,19 +300,14 @@ class jEpub {
       }, {
         client: true
       }));
-
       this._Pages[index] = title;
       return this;
     }
   }
-
   generate(type = 'blob', onUpdate) {
     if (!JSZip.support[type]) throw "This browser does not support ".concat(type);
-
     let notes = this._Zip.file('OEBPS/notes.html');
-
     notes = !notes ? false : true;
-
     this._Zip.file('book.opf', ejs.render(_book.default, {
       i18n: this._I18n,
       uuid: this._Uuid,
@@ -369,14 +324,12 @@ class jEpub {
     }, {
       client: true
     }));
-
     this._Zip.file('OEBPS/table-of-contents.html', ejs.render(_tableOfContents.default, {
       i18n: this._I18n,
       pages: this._Pages
     }, {
       client: true
     }));
-
     this._Zip.file('toc.ncx', ejs.render(_toc.default, {
       i18n: this._I18n,
       uuid: this._Uuid,
@@ -387,7 +340,6 @@ class jEpub {
     }, {
       client: true
     }));
-
     return this._Zip.generateAsync({
       type: type,
       mimeType: _mimetype.default,
@@ -397,9 +349,7 @@ class jEpub {
       }
     }, onUpdate);
   }
-
 }
-
 exports["default"] = jEpub;
 module.exports = exports["default"];
 
@@ -425,58 +375,53 @@ exports.parseDOM = parseDOM;
 exports.html2text = html2text;
 exports.validateUrl = validateUrl;
 exports.mime2ext = mime2ext;
-
 /**
  * Generates a UUID
  * @see https://stackoverflow.com/a/2117523
  * @returns {string} uuid
  */
+
 function uuidv4() {
   return ([1e7] + -1e3 + -4e3 + -8e3 + -1e11).replace(/[018]/g, c => (c ^ crypto.getRandomValues(new Uint8Array(1))[0] & 15 >> c / 4).toString(16));
 }
+
 /**
  * Checks if a value is object
  * @see https://stackoverflow.com/a/14706877
  * @returns {boolean}
  */
-
-
 function isObject(obj) {
   const type = typeof obj;
   return type === 'function' || type === 'object' && !!obj;
 }
+
 /**
  * Checks if a value is empty
  * @returns {boolean}
  */
-
-
 function isEmpty(val) {
   if (val === null) {
     return true;
   } else if (typeof val === 'string') {
     return !val.trim();
   }
-
   return false;
 }
+
 /**
  * Get current moment in ISO format
  * @param {Object} date
  * @returns {string} ISO date
  */
-
-
 function getISODate(date = new Date()) {
   return date.toISOString();
 }
+
 /**
  * Convert convert HTML to valid XHTML
  * @param {String} html
  * @param {String} outText return as plain text
  */
-
-
 function parseDOM(html, outText = false) {
   let doc = new DOMParser().parseFromString("<!doctype html><body>".concat(html), 'text/html');
   if (outText) return doc.body.textContent.trim();
@@ -484,12 +429,11 @@ function parseDOM(html, outText = false) {
   doc = doc.replace(/(^<body\s?[^>]*>|<\/body>$)/g, '');
   return doc;
 }
+
 /**
  * Convert HTML to plain text
  * @param {String} html
  */
-
-
 function html2text(html, noBr = false) {
   html = html.replace(/<style([\s\S]*?)<\/style>/gi, '');
   html = html.replace(/<script([\s\S]*?)<\/script>/gi, '');
@@ -502,34 +446,29 @@ function html2text(html, noBr = false) {
   if (noBr) html = html.replace(/\n+/g, ' ');
   return html;
 }
+
 /**
  * @see https://gist.github.com/dperini/729294
  * @param {String} value
  */
-
-
 function validateUrl(value) {
   return /^(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,}))\.?)(?::\d{2,5})?(?:[/?#]\S*)?$/i.test(value);
 }
+
 /**
  * Convert MIME type to extension
  * @param {String} mime
  */
-
-
 function mime2ext(mime) {
   let ext = null;
-
   switch (mime) {
     case 'image/jpg':
     case 'image/jpeg':
       ext = 'jpg';
       break;
-
     case 'image/svg+xml':
       ext = 'svg';
       break;
-
     case 'image/gif':
     case 'image/apng':
     case 'image/png':
@@ -537,16 +476,17 @@ function mime2ext(mime) {
     case 'image/bmp':
       ext = mime.split('/')[1];
       break;
-
     default:
       ext = null;
       break;
   }
-
   return ext;
-} // TODO: kepub
+}
+
+// TODO: kepub
 // Wrap text, image <span class="koboSpan" id="kobo.{para:số thứ tự đoạn văn, bắt đầu bằng 1}.{seg: số thứ tự cụm bị wrap, bắt đầu bằng 1}">text</span>
 // https://github.com/pgaskin/kepubify/blob/871aa0bb2047b5ba171bc608024bdb180cb29d70/kepub/transform.go#L173
+
 //UnescapeString
 // var htmlEscaper = strings.NewReplacer(
 // 	`&`, "&amp;",
@@ -1573,7 +1513,7 @@ Object.defineProperty(imageType, 'minimumBytes', {value: fileType.minimumBytes})
   \*********************************************/
 /***/ ((module) => {
 
-module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<container version=\"1.0\" xmlns=\"urn:oasis:names:tc:opendocument:xmlns:container\">\n\t<rootfiles>\n\t\t<rootfile full-path=\"book.opf\" media-type=\"application/oebps-package+xml\" />\n\t</rootfiles>\n</container>"
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<container version=\"1.0\" xmlns=\"urn:oasis:names:tc:opendocument:xmlns:container\">\n<rootfiles>\n<rootfile full-path=\"book.opf\" media-type=\"application/oebps-package+xml\"/>\n</rootfiles>\n</container>"
 
 /***/ }),
 
@@ -1583,7 +1523,7 @@ module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<container versio
   \*************************************************/
 /***/ ((module) => {
 
-module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"<%= i18n.code %>\">\n\n<head>\n\t<title><%= i18n.cover %></title>\n\t<meta http-equiv=\"Content-Type\" content=\"application/xhtml+xml; charset=utf-8\" />\n</head>\n\n<body>\n\t<div id=\"cover-image\">\n\t\t<img src=\"../<%= cover.path %>\" alt=\"<%= i18n.cover %>\" />\n\t</div>\n</body>\n\n</html>\n"
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"<%= i18n.code %>\">\n<head>\n<title><%= i18n.cover %></title>\n<meta http-equiv=\"Content-Type\" content=\"application/xhtml+xml; charset=utf-8\"/>\n</head>\n<body>\n<div id=\"cover-image\">\n<img src=\"../<%= cover.path %>\" alt=\"<%= i18n.cover %>\"/>\n</div>\n</body>\n</html>\n"
 
 /***/ }),
 
@@ -1593,7 +1533,7 @@ module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<!DOCTYPE html PU
   \*******************************************/
 /***/ ((module) => {
 
-module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"<%= i18n.code %>\">\n\n<head>\n\t<title><%= i18n.note %></title>\n\t<meta http-equiv=\"Content-Type\" content=\"application/xhtml+xml; charset=utf-8\" />\n</head>\n\n<body>\n\t<div id=\"notes-page\">\n\t\t<div class=\"ugc\">\n            <%- notes %>\n\t\t</div>\n\t</div>\n</body>\n\n</html>\n"
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"<%= i18n.code %>\">\n<head>\n<title><%= i18n.note %></title>\n<meta http-equiv=\"Content-Type\" content=\"application/xhtml+xml; charset=utf-8\"/>\n</head>\n<body>\n<div id=\"notes-page\">\n<div class=\"ugc\">\n<%- notes %>\n</div>\n</div>\n</body>\n</html>\n"
 
 /***/ }),
 
@@ -1603,7 +1543,7 @@ module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<!DOCTYPE html PU
   \******************************************/
 /***/ ((module) => {
 
-module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"<%= i18n.code %>\">\n\n<head>\n\t<title><%= title %></title>\n\t<meta http-equiv=\"Content-Type\" content=\"application/xhtml+xml; charset=utf-8\" />\n</head>\n\n<body>\n\t<div class=\"chapter type-1\">\n\t\t<div class=\"chapter-title-wrap\">\n\t\t\t<h2 class=\"chapter-title\"><%= title %></h2>\n\t\t</div>\n\t\t<div class=\"ugc chapter-ugc\">\n            <% if (Array.isArray(content)) { %>\n                <% content.forEach(item => { %>\n                    <p class=\"indent\"><%= item %></p>\n                <% }); %>\n            <% } else { %>\n                <%- content %>\n            <% } %>\n\t\t</div>\n\t</div>\n</body>\n\n</html>\n"
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"<%= i18n.code %>\">\n<head>\n<title><%= title %></title>\n<meta http-equiv=\"Content-Type\" content=\"application/xhtml+xml; charset=utf-8\"/>\n</head>\n<body>\n<div class=\"chapter type-1\">\n<div class=\"chapter-title-wrap\">\n<h2 class=\"chapter-title\"><%= title %></h2>\n</div>\n<div class=\"ugc chapter-ugc\">\n<% if (Array.isArray(content)) { %>\n<% content.forEach(item => { %>\n<p class=\"indent\"><%= item %></p>\n<% }); %>\n<% } else { %>\n<%- content %>\n<% } %>\n</div>\n</div>\n</body>\n</html>\n"
 
 /***/ }),
 
@@ -1613,7 +1553,7 @@ module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<!DOCTYPE html PU
   \*******************************************************/
 /***/ ((module) => {
 
-module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"<%= i18n.code %>\">\n\n<head>\n\t<title><%= i18n.toc %></title>\n\t<meta http-equiv=\"Content-Type\" content=\"application/xhtml+xml; charset=utf-8\" />\n</head>\n\n<body>\n\t<div id=\"toc\">\n\t\t<h1><%= i18n.toc %></h1>\n\t\t<ul>\n            <% pages.forEach((title, index) => { %>\n                <li class=\"chaptertype-1\">\n                    <a href=\"page-<%= index %>.html\">\n                        <span class=\"toc-chapter-title\"><%= title %></span>\n                    </a>\n                </li>\n            <% }); %>\n\t\t</ul>\n\t</div>\n</body>\n\n</html>\n"
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"<%= i18n.code %>\">\n<head>\n<title><%= i18n.toc %></title>\n<meta http-equiv=\"Content-Type\" content=\"application/xhtml+xml; charset=utf-8\"/>\n</head>\n<body>\n<div id=\"toc\">\n<h1><%= i18n.toc %></h1>\n<ul>\n<% pages.forEach((title, index) => { %>\n<li class=\"chaptertype-1\">\n<a href=\"page-<%= index %>.html\">\n<span class=\"toc-chapter-title\"><%= title %></span>\n</a>\n</li>\n<% }); %>\n</ul>\n</div>\n</body>\n</html>\n"
 
 /***/ }),
 
@@ -1623,7 +1563,7 @@ module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<!DOCTYPE html PU
   \************************************************/
 /***/ ((module) => {
 
-module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"<%= i18n.code %>\">\n\n<head>\n\t<title><%= i18n.info %></title>\n\t<meta http-equiv=\"Content-Type\" content=\"application/xhtml+xml; charset=utf-8\" />\n</head>\n\n<body>\n\t<div id=\"title-page\">\n\t\t<h1 class=\"title\"><%= title %></h1>\n\t\t<h2 class=\"subtitle\"></h2>\n\t\t<h3 class=\"author\"><%= author %></h3>\n\t\t<h4 class=\"publisher\"><%= publisher %></h4>\n\t</div>\n    <% if (Array.isArray(tags) && tags.length) { %>\n        <div class=\"part-title-wrap\">\n            <% tags = tags.join('</code>, <code>'); %>\n            <code><%- tags %></code>\n        </div>\n    <% } %>\n    <% if (description) { %>\n        <div class=\"ugc\">\n            <%- description %>\n        </div>\n    <% } %>\n</body>\n\n</html>\n"
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.1//EN\" \"http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd\">\n<html xmlns=\"http://www.w3.org/1999/xhtml\" xml:lang=\"<%= i18n.code %>\">\n<head>\n<title><%= i18n.info %></title>\n<meta http-equiv=\"Content-Type\" content=\"application/xhtml+xml; charset=utf-8\"/>\n</head>\n<body>\n<div id=\"title-page\">\n<h1 class=\"title\"><%= title %></h1>\n<h2 class=\"subtitle\"></h2>\n<h3 class=\"author\"><%= author %></h3>\n<h4 class=\"publisher\"><%= publisher %></h4>\n</div>\n<% if (Array.isArray(tags) && tags.length) { %>\n<div class=\"part-title-wrap\">\n<% tags = tags.join('</code>, <code>'); %>\n<code><%- tags %></code>\n</div>\n<% } %>\n<% if (description) { %>\n<div class=\"ugc\">\n<%- description %>\n</div>\n<% } %>\n</body>\n</html>\n"
 
 /***/ }),
 
@@ -1633,7 +1573,7 @@ module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<!DOCTYPE html PU
   \***********************************/
 /***/ ((module) => {
 
-module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<package version=\"2.0\" xmlns=\"http://www.idpf.org/2007/opf\" unique-identifier=\"PrimaryID\">\n\n\t<metadata xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:opf=\"http://www.idpf.org/2007/opf\">\n\t\t<dc:title><%= title %></dc:title>\n\t\t<dc:language><%= i18n.code %></dc:language>\n\t\t<dc:identifier id=\"PrimaryID\" opf:scheme=\"<%= uuid.scheme %>\"><%= uuid.id %></dc:identifier>\n        <dc:date opf:event=\"publication\"><%= date %></dc:date>\n        <% if (description) { %>\n\t\t    <dc:description><%= description %></dc:description>\n        <% } %>\n\t\t<dc:creator opf:role=\"aut\"><%= author %></dc:creator>\n\t\t<dc:publisher><%= publisher %></dc:publisher>\n        <% if (cover) { %>\n\t\t    <meta name=\"cover\" content=\"cover-image\" />\n        <% } %>\n        <% if (Array.isArray(tags) && tags.length) tags.forEach(tag => { %>\n            <dc:subject><%= tag %></dc:subject>\n        <% }); %>\n\t</metadata>\n\n\t<manifest>\n        <% if (cover) { %>\n\t\t    <item id=\"front-cover\" href=\"OEBPS/front-cover.html\" media-type=\"application/xhtml+xml\" />\n        <% } %>\n\t\t<item id=\"title-page\" href=\"OEBPS/title-page.html\" media-type=\"application/xhtml+xml\" />\n\t\t<item id=\"notes\" href=\"OEBPS/notes.html\" media-type=\"application/xhtml+xml\" />\n\t\t<item id=\"table-of-contents\" href=\"OEBPS/table-of-contents.html\" media-type=\"application/xhtml+xml\" />\n        <% pages.forEach((page, index) => { %>\n            <item id=\"page-<%= index %>\" href=\"OEBPS/page-<%= index %>.html\" media-type=\"application/xhtml+xml\" />\n        <% }); %>\n        <% if (cover) { %>\n\t\t    <item id=\"cover-image\" href=\"<%= cover.path %>\" media-type=\"<%= cover.type %>\" properties=\"cover-image\" />\n        <% } %>\n\t\t<item id=\"ncx\" href=\"toc.ncx\" media-type=\"application/x-dtbncx+xml\" />\n        <% Object.keys(images).forEach(name => { %>\n            <item id=\"<%= name %>\" href=\"OEBPS/<%= images[name].path %>\" media-type=\"<%= images[name].type %>\" />\n        <% }); %>\n\t</manifest>\n\n\t<spine toc=\"ncx\">\n        <% if (cover) { %>\n\t\t    <itemref idref=\"front-cover\" linear=\"no\" />\n        <% } %>\n\t\t<itemref idref=\"title-page\" linear=\"yes\" />\n\t\t<itemref idref=\"table-of-contents\" linear=\"yes\" />\n        <% pages.forEach((page, index) => { %>\n            <itemref idref=\"page-<%= index %>\" linear=\"yes\" />\n        <% }); %>\n        <% if (notes) { %>\n            <itemref idref=\"notes\" linear=\"yes\" />\n        <% } %>\n\t</spine>\n\n\t<guide>\n        <% if (cover) { %>\n\t\t    <reference type=\"cover\" title=\"<%= i18n.cover %>\" href=\"OEBPS/front-cover.html\" />\n        <% } %>\n\t\t<reference type=\"toc\" title=\"<%= i18n.toc %>\" href=\"OEBPS/table-of-contents.html\" />\n\t</guide>\n\n</package>\n"
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<package version=\"2.0\" xmlns=\"http://www.idpf.org/2007/opf\" unique-identifier=\"PrimaryID\">\n<metadata xmlns:dc=\"http://purl.org/dc/elements/1.1/\" xmlns:opf=\"http://www.idpf.org/2007/opf\">\n<dc:title><%= title %></dc:title>\n<dc:language><%= i18n.code %></dc:language>\n<dc:identifier id=\"PrimaryID\" opf:scheme=\"<%= uuid.scheme %>\"><%= uuid.id %></dc:identifier>\n<dc:date opf:event=\"publication\"><%= date %></dc:date>\n<% if (description) { %>\n<dc:description><%= description %></dc:description>\n<% } %>\n<dc:creator opf:role=\"aut\"><%= author %></dc:creator>\n<dc:publisher><%= publisher %></dc:publisher>\n<% if (cover) { %>\n<meta name=\"cover\" content=\"cover-image\"/>\n<% } %>\n<% if (Array.isArray(tags) && tags.length) tags.forEach(tag => { %>\n<dc:subject><%= tag %></dc:subject>\n<% }); %>\n</metadata>\n<manifest>\n<% if (cover) { %>\n<item id=\"front-cover\" href=\"OEBPS/front-cover.html\" media-type=\"application/xhtml+xml\"/>\n<% } %>\n<item id=\"title-page\" href=\"OEBPS/title-page.html\" media-type=\"application/xhtml+xml\"/>\n<item id=\"notes\" href=\"OEBPS/notes.html\" media-type=\"application/xhtml+xml\"/>\n<item id=\"table-of-contents\" href=\"OEBPS/table-of-contents.html\" media-type=\"application/xhtml+xml\"/>\n<% pages.forEach((page, index) => { %>\n<item id=\"page-<%= index %>\" href=\"OEBPS/page-<%= index %>.html\" media-type=\"application/xhtml+xml\"/>\n<% }); %>\n<% if (cover) { %>\n<item id=\"cover-image\" href=\"<%= cover.path %>\" media-type=\"<%= cover.type %>\" properties=\"cover-image\"/>\n<% } %>\n<item id=\"ncx\" href=\"toc.ncx\" media-type=\"application/x-dtbncx+xml\"/>\n<% Object.keys(images).forEach(name => { %>\n<item id=\"<%= name %>\" href=\"OEBPS/<%= images[name].path %>\" media-type=\"<%= images[name].type %>\"/>\n<% }); %>\n</manifest>\n<spine toc=\"ncx\">\n<% if (cover) { %>\n<itemref idref=\"front-cover\" linear=\"no\"/>\n<% } %>\n<itemref idref=\"title-page\" linear=\"yes\"/>\n<itemref idref=\"table-of-contents\" linear=\"yes\"/>\n<% pages.forEach((page, index) => { %>\n<itemref idref=\"page-<%= index %>\" linear=\"yes\"/>\n<% }); %>\n<% if (notes) { %>\n<itemref idref=\"notes\" linear=\"yes\"/>\n<% } %>\n</spine>\n<guide>\n<% if (cover) { %>\n<reference type=\"cover\" title=\"<%= i18n.cover %>\" href=\"OEBPS/front-cover.html\"/>\n<% } %>\n<reference type=\"toc\" title=\"<%= i18n.toc %>\" href=\"OEBPS/table-of-contents.html\"/>\n</guide>\n</package>\n"
 
 /***/ }),
 
@@ -1653,7 +1593,7 @@ module.exports = "application/epub+zip"
   \**********************************/
 /***/ ((module) => {
 
-module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<!DOCTYPE ncx PUBLIC \"-//NISO//DTD ncx 2005-1//EN\" \"http://www.daisy.org/z3986/2005/ncx-2005-1.dtd\">\n\n<ncx version=\"2005-1\" xml:lang=\"<%= i18n.code %>\" xmlns=\"http://www.daisy.org/z3986/2005/ncx/\">\n\t<head>\n\t\t<meta name=\"dtb:uid\" content=\"<%= uuid.id %>\" />\n\t\t<meta name=\"dtb:depth\" content=\"2\" />\n\t\t<meta name=\"dtb:totalPageCount\" content=\"0\" />\n\t\t<meta name=\"dtb:maxPageNumber\" content=\"0\" />\n\t</head>\n\n\t<docTitle>\n\t\t<text><%= title %></text>\n\t</docTitle>\n\n\t<docAuthor>\n\t\t<text><%= author %></text>\n\t</docAuthor>\n\n\t<navMap>\n\t\t<navPoint id=\"title-page\" playOrder=\"1\">\n\t\t\t<navLabel>\n\t\t\t\t<text><%= i18n.info %></text>\n\t\t\t</navLabel>\n\t\t\t<content src=\"OEBPS/title-page.html\" />\n\t\t</navPoint>\n\t\t<navPoint id=\"table-of-contents\" playOrder=\"2\">\n\t\t\t<navLabel>\n\t\t\t\t<text><%= i18n.toc %></text>\n\t\t\t</navLabel>\n\t\t\t<content src=\"OEBPS/table-of-contents.html\" />\n\t\t</navPoint>\n        <% pages.forEach((title, index) => { %>\n            <navPoint id=\"page-<%= index %>\" playOrder=\"<%= (index + 3) %>\">\n                <navLabel>\n                    <text><%= title %></text>\n                </navLabel>\n                <content src=\"OEBPS/page-<%= index %>.html\" />\n            </navPoint>\n        <% }); %>\n        <% if (notes) { %>\n            <navPoint id=\"notes-page\" playOrder=\"2\">\n                <navLabel>\n                    <text><%= i18n.note %></text>\n                </navLabel>\n                <content src=\"OEBPS/notes.html\" />\n            </navPoint>\n        <% } %>\n\t</navMap>\n</ncx>\n"
+module.exports = "<?xml version=\"1.0\" encoding=\"UTF-8\" ?>\n<!DOCTYPE ncx PUBLIC \"-//NISO//DTD ncx 2005-1//EN\" \"http://www.daisy.org/z3986/2005/ncx-2005-1.dtd\">\n<ncx version=\"2005-1\" xml:lang=\"<%= i18n.code %>\" xmlns=\"http://www.daisy.org/z3986/2005/ncx/\">\n<head>\n<meta name=\"dtb:uid\" content=\"<%= uuid.id %>\"/>\n<meta name=\"dtb:depth\" content=\"2\"/>\n<meta name=\"dtb:totalPageCount\" content=\"0\"/>\n<meta name=\"dtb:maxPageNumber\" content=\"0\"/>\n</head>\n<docTitle>\n<text><%= title %></text>\n</docTitle>\n<docAuthor>\n<text><%= author %></text>\n</docAuthor>\n<navMap>\n<navPoint id=\"title-page\" playOrder=\"1\">\n<navLabel>\n<text><%= i18n.info %></text>\n</navLabel>\n<content src=\"OEBPS/title-page.html\"/>\n</navPoint>\n<navPoint id=\"table-of-contents\" playOrder=\"2\">\n<navLabel>\n<text><%= i18n.toc %></text>\n</navLabel>\n<content src=\"OEBPS/table-of-contents.html\"/>\n</navPoint>\n<% pages.forEach((title, index) => { %>\n<navPoint id=\"page-<%= index %>\" playOrder=\"<%= (index + 3) %>\">\n<navLabel>\n<text><%= title %></text>\n</navLabel>\n<content src=\"OEBPS/page-<%= index %>.html\"/>\n</navPoint>\n<% }); %>\n<% if (notes) { %>\n<navPoint id=\"notes-page\" playOrder=\"2\">\n<navLabel>\n<text><%= i18n.note %></text>\n</navLabel>\n<content src=\"OEBPS/notes.html\"/>\n</navPoint>\n<% } %>\n</navMap>\n</ncx>\n"
 
 /***/ }),
 
