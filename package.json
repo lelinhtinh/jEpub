@@ -50,6 +50,7 @@
     "babel-plugin-add-module-exports": "^0.2.1",
     "browser-sync": "^2.26.7",
     "browser-sync-webpack-plugin": "^2.2.2",
+    "html-minifier-terser": "^7.2.0",
     "mkdirp": "^0.5.5",
     "raw-loader": "^0.5.1",
     "rimraf": "^2.7.1",
