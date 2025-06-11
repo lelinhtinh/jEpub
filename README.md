@@ -19,45 +19,85 @@ npm install --save jepub
 You can also use it via a CDN:
 
 ```html
-<script src="https://unpkg.com/jepub/dist/jepub.min.js"></script>
+<!-- UMD build -->
+<script src="https://unpkg.com/jepub/dist/jepub.js"></script>
 ```
 
 or:
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/jepub/dist/jepub.min.js"></script>
+<!-- UMD build -->
+<script src="https://cdn.jsdelivr.net/npm/jepub/dist/jepub.js"></script>
+```
+
+For ES modules:
+
+```html
+<!-- ES module build -->
+<script type="module">
+  import jEpub from 'https://unpkg.com/jepub/dist/jepub.es.js';
+</script>
 ```
 
 ## Dependencies
 
-jEpub requires [JSZip](https://github.com/Stuk/jszip) and [EJS](https://github.com/mde/ejs). Make sure these libraries are loaded before starting your code.
+jEpub requires [JSZip](https://github.com/Stuk/jszip) and
+[EJS](https://github.com/mde/ejs) as **external dependencies**.
+
+⚠️ **Important**: Starting from v2.1.4, JSZip and EJS are **not bundled** with
+jEpub. You need to include them separately.
+
+### For UMD builds (browser usage)
+
+Make sure these libraries are loaded before jEpub:
 
 ```html
-<script src="jszip.js"></script>
-<script src="ejs.js"></script>
-<script src="jepub.js"></script>
+<!-- Required dependencies -->
+<script src="https://unpkg.com/jszip/dist/jszip.min.js"></script>
+<script src="https://unpkg.com/ejs/ejs.min.js"></script>
+
+<!-- jEpub library -->
+<script src="https://unpkg.com/jepub/dist/jepub.js"></script>
 <script>
-    const jepub = new jEpub()
-    // jepub.init({
-    // do something
+  const jepub = new jEpub();
+  // jepub.init({
+  // do something
 </script>
+```
+
+### For ES modules
+
+You need to install dependencies separately:
+
+```bash
+npm install jepub jszip ejs
+```
+
+```javascript
+import jEpub from 'jepub';
+// Dependencies will be resolved by your bundler
+
+const jepub = new jEpub();
+// jepub.init({
+// do something
 ```
 
 ## Usage
 
 ```typescript
-const jepub = new jEpub()
+const jepub = new jEpub();
 jepub.init({
-    i18n: 'en', // Internationalization
-    title: 'Book title',
-    author: 'Book author',
-    publisher: 'Book publisher',
-    description: '<b>Book</b> description', // optional
-    tags: [ 'epub', 'tag' ] // optional
-})
+  i18n: 'en', // Internationalization
+  title: 'Book title',
+  author: 'Book author',
+  publisher: 'Book publisher',
+  description: '<b>Book</b> description', // optional
+  tags: ['epub', 'tag'], // optional
+});
 ```
 
-- **i18n** only include the language codes defined in [`i18n.json`](https://github.com/lelinhtinh/jEpub/blob/master/src/i18n.json)
+- **i18n** only include the language codes defined in
+  [`i18n.json`](https://github.com/lelinhtinh/jEpub/blob/master/src/i18n.json)
 - **description**: HTML string.
 - **tags**: Array.
 
@@ -114,7 +154,8 @@ jepub.image(data: object, IMG_ID: string)
 - **data**: A Blob or an ArrayBuffer object from XMLHttpRequest.
 - **IMG_ID**: Unique id.
 
-Place `<%= image[IMG_ID] %>` inside the chapter's content *(HTML string only)*, where you want to display it.
+Place `<%= image[IMG_ID] %>` inside the chapter's content _(HTML string only)_,
+where you want to display it.
 
 ### Generate EPUB `*`
 
@@ -122,8 +163,10 @@ Place `<%= image[IMG_ID] %>` inside the chapter's content *(HTML string only)*, 
 jepub.generate(type = 'blob', onUpdate?: metadata => void)
 ```
 
-- **type**: The type of EPUB to return. See [JSZip type option](https://stuk.github.io/jszip/documentation/api_jszip/generate_async.html#type-option).
-- **onUpdate**: _(optional)_ Callback function. See [JSZip onUpdate callback](https://stuk.github.io/jszip/documentation/api_jszip/generate_async.html#onupdate-callback).
+- **type**: The type of EPUB to return. See
+  [JSZip type option](https://stuk.github.io/jszip/documentation/api_jszip/generate_async.html#type-option).
+- **onUpdate**: _(optional)_ Callback function. See
+  [JSZip onUpdate callback](https://stuk.github.io/jszip/documentation/api_jszip/generate_async.html#onupdate-callback).
 
 ### Static methods `+`
 
@@ -139,10 +182,11 @@ jEpub.html2text(html: string, noBr = false)
 ## Development
 
 ```bash
-npm start
+npm run dev
 ```
 
-Builds are concatenated and minified using [Webpack](https://webpack.js.org/) and [Babel](https://babeljs.io/).
+Builds are created using [Vite](https://vitejs.dev/) for modern JavaScript
+development.
 
 ```bash
 npm run build

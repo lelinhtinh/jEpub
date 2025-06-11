@@ -1,9 +1,8 @@
 {
   "recommendations": [
-    "HookyQR.beautify",
-    "dbaeumer.vscode-eslint",
-    "DotJoshJohnson.xml",
     "EditorConfig.editorconfig",
-    "DigitalBrainstem.javascript-ejs-support"
+    "dbaeumer.vscode-eslint",
+    "esbenp.prettier-vscode",
+    "digitalbrainstem.javascript-ejs-support"
   ]
 }

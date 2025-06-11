@@ -1,0 +1,40 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+*.min.js
+*.min.css
+
+# Generated files
+*.lock
+package-lock.json
+yarn.lock
+
+# Logs
+*.log
+logs/
+
+# Coverage
+coverage/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary
+.tmp/
+.cache/
+
+# Config files that should maintain specific formatting
+*.config.js
+jsconfig.json
+tsconfig.json
+
+# Templates (EJS files have specific formatting needs)
+src/tpl/
+*.ejs

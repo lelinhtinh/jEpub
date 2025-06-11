@@ -1,48 +1,47 @@
 {
-  "files.exclude": {
-    "**/node_modules/*": true
-  },
-  "search.exclude": {
-    "**/epub-sample": true,
-    "**/dist": true
-  },
-  "editor.autoIndent": false,
-  "editor.wordWrap": "on",
-  "workbench.editor.closeOnFileDelete": false,
-  "editor.minimap.renderCharacters": false,
-  "beautify.language": {
-    "js": {
-      "type": [
-        "javascript"
-      ],
-      "filename": [],
-      "ext": [
-        "js"
-      ]
-    },
-    "css": [
-      "css"
-    ],
-    "html": [
-      "html"
-    ]
-  },
-  "beautify.config": {
-    "jslint_happy": true
-  },
   "cSpell.words": [
-    "Epub",
-    "NISO",
-    "OEBPS",
     "apng",
     "devtool",
     "dtbncx",
+    "Epub",
     "idref",
     "jepub",
     "jsfiddle",
     "jszip",
     "lelinhtinh",
+    "NISO",
+    "OEBPS",
+    "onwarn",
     "uffff",
     "uuidv"
-  ]
+  ],
+
+  // Editor settings for consistent formatting
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit"
+  },
+
+  // Language-specific settings
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[markdown]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  // ESLint settings
+  "eslint.validate": [
+    "javascript"
+  ],
+
+  // Prettier settings
+  "prettier.requireConfig": true,
+  "prettier.useEditorConfig": false
 }

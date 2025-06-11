@@ -20,8 +20,6 @@ LICENSE         text
 .eslintignore   text
 
 ## CONFIGS
-.babelrc        text
-.browserslistrc text
 .editorconfig   text
 .gitattributes  text
 .gitignore      text
