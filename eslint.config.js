@@ -93,6 +93,55 @@ export default [
         },
     },
     {
+        // Config for sample/example files
+        files: ["samples/**/*.js", "demo/**/*.js"],
+        languageOptions: {
+            ecmaVersion: 2025,
+            sourceType: "module",
+            globals: {
+                // Node.js globals for sample files
+                process: "readonly",
+                __dirname: "readonly",
+                __filename: "readonly",
+                Buffer: "readonly",
+                global: "readonly",
+                require: "readonly",
+                module: "readonly",
+                exports: "readonly",
+
+                // Browser globals for demo files
+                window: "readonly",
+                document: "readonly",
+                console: "readonly",
+                fetch: "readonly",
+                URL: "readonly",
+                URLSearchParams: "readonly",
+                XMLHttpRequest: "readonly",
+                DOMParser: "readonly",
+                XMLSerializer: "readonly",
+                crypto: "readonly",
+                Blob: "readonly",
+                ArrayBuffer: "readonly",
+                Uint8Array: "readonly",
+
+                // Library globals
+                JSZip: "readonly",
+                ejs: "readonly",
+                jEpub: "readonly",
+            },
+        },
+        rules: {
+            // Allow console statements in examples/samples
+            "no-console": "off",
+            // Allow unused variables in examples (often for demonstration)
+            "no-unused-vars": ["warn", {
+                argsIgnorePattern: "^_",
+                varsIgnorePattern: "^_",
+                caughtErrorsIgnorePattern: "^_"
+            }],
+        },
+    },
+    {
         // Ignore patterns
         ignores: ["dist/", "node_modules/", "*.min.js"],
     },
