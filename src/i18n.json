@@ -19,5 +19,131 @@
     "toc": "विषय - सूची",
     "info": "जानकारी",
     "note": "टिप्पणियाँ"
+  },
+  "fr": {
+    "code": "fr",
+    "cover": "Couverture",
+    "toc": "Table des matières",
+    "info": "Information",
+    "note": "Notes"
+  },
+  "de": {
+    "code": "de",
+    "cover": "Umschlag",
+    "toc": "Inhaltsverzeichnis",
+    "info": "Information",
+    "note": "Notizen"
+  },
+  "es": {
+    "code": "es",
+    "cover": "Portada",
+    "toc": "Tabla de contenidos",
+    "info": "Información",
+    "note": "Notas"
+  },
+  "it": {
+    "code": "it",
+    "cover": "Copertina",
+    "toc": "Indice",
+    "info": "Informazioni",
+    "note": "Note"
+  },
+  "pt": {
+    "code": "pt",
+    "cover": "Capa",
+    "toc": "Índice",
+    "info": "Informação",
+    "note": "Notas"
+  },
+  "ru": {
+    "code": "ru",
+    "cover": "Обложка",
+    "toc": "Содержание",
+    "info": "Информация",
+    "note": "Заметки"
+  },
+  "ja": {
+    "code": "ja",
+    "cover": "表紙",
+    "toc": "目次",
+    "info": "情報",
+    "note": "ノート"
+  },
+  "ko": {
+    "code": "ko",
+    "cover": "표지",
+    "toc": "목차",
+    "info": "정보",
+    "note": "메모"
+  },
+  "zh": {
+    "code": "zh",
+    "cover": "封面",
+    "toc": "目录",
+    "info": "信息",
+    "note": "注释"
+  },
+  "ar": {
+    "code": "ar",
+    "cover": "الغلاف",
+    "toc": "جدول المحتويات",
+    "info": "معلومات",
+    "note": "ملاحظات"
+  },
+  "nl": {
+    "code": "nl",
+    "cover": "Omslag",
+    "toc": "Inhoudsopgave",
+    "info": "Informatie",
+    "note": "Notities"
+  },
+  "sv": {
+    "code": "sv",
+    "cover": "Omslag",
+    "toc": "Innehållsförteckning",
+    "info": "Information",
+    "note": "Anteckningar"
+  },
+  "da": {
+    "code": "da",
+    "cover": "Omslag",
+    "toc": "Indholdsfortegnelse",
+    "info": "Information",
+    "note": "Noter"
+  },
+  "no": {
+    "code": "no",
+    "cover": "Omslag",
+    "toc": "Innholdsfortegnelse",
+    "info": "Informasjon",
+    "note": "Notater"
+  },
+  "fi": {
+    "code": "fi",
+    "cover": "Kansi",
+    "toc": "Sisällysluettelo",
+    "info": "Tiedot",
+    "note": "Muistiinpanot"
+  },
+  "pl": {
+    "code": "pl",
+    "cover": "Okładka",
+    "toc": "Spis treści",
+    "info": "Informacje",
+    "note": "Notatki"
+  },
+  "cs": {
+    "code": "cs",
+    "cover": "Obal",
+    "toc": "Obsah",
+    "info": "Informace",
+    "note": "Poznámky"
+  },
+  "tr": {
+    "code": "tr",
+    "cover": "Kapak",
+    "toc": "İçindekiler",
+    "info": "Bilgi",
+    "note": "Notlar"
   }
 }

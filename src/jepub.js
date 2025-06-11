@@ -20,18 +20,23 @@ import toc from './tpl/toc.ncx.ejs?raw';
 
 export default class jEpub {
     constructor() {
-        this._I18n = {};
-        this._Info = {};
-        this._Uuid = {};
-        this._Date = null;
-        this._Cover = null;
+        this._I18n = {}; // Object - Language translations
+        this._Info = {}; // Object - Book information (title, author, etc.)
+        this._Uuid = {}; // Object - UUID information with scheme and id
+        this._Date = null; // string | null - ISO date string
+        this._Cover = null; // Object | null - Cover image information
 
-        this._Pages = [];
-        this._Images = [];
+        this._Pages = []; // Array<string> - Array of page titles
+        this._Images = []; // Array<Object> - Array of image objects with type and path
 
-        this._Zip = {};
+        this._Zip = {}; // JSZip - ZIP file handler
     }
 
+    /**
+     * Initialize the jEpub instance
+     * @param {Object | JSZip} details - Book details object or existing JSZip instance
+     * @returns {jEpub} - Returns this instance for method chaining
+     */
     init(details) {
         if (details instanceof JSZip) {
             this._Zip = details;
@@ -86,10 +91,22 @@ export default class jEpub {
         return this;
     }
 
+    /**
+     * Convert HTML to plain text
+     * @param {string} html - HTML string to convert
+     * @param {boolean} noBr - Whether to remove line breaks
+     * @returns {string} - Plain text string
+     */
     static html2text(html, noBr = false) {
         return utils.html2text(html, noBr);
     }
 
+    /**
+     * Set the publication date
+     * @param {Date} date - Date object for the publication
+     * @returns {jEpub} - Returns this instance for method chaining
+     * @throws {string} - Throws error if date is not valid
+     */
     date(date) {
         if (date instanceof Date) {
             this._Date = utils.getISODate(date);
@@ -99,11 +116,17 @@ export default class jEpub {
         }
     }
 
+    /**
+     * Set the UUID for the book
+     * @param {string} id - UUID string or URL
+     * @returns {jEpub} - Returns this instance for method chaining
+     * @throws {string} - Throws error if UUID is empty
+     */
     uuid(id) {
         if (utils.isEmpty(id)) {
             throw 'UUID value is empty';
         } else {
-            let scheme = 'uuid';
+            let scheme = 'uuid'; // string - UUID scheme type
             if (utils.validateUrl(id)) scheme = 'URI';
             this._Uuid = {
                 scheme,
@@ -113,8 +136,14 @@ export default class jEpub {
         }
     }
 
+    /**
+     * Set the cover image for the book
+     * @param {Blob | ArrayBuffer} data - Image data as Blob or ArrayBuffer
+     * @returns {jEpub} - Returns this instance for method chaining
+     * @throws {string} - Throws error if cover data is invalid
+     */
     cover(data) {
-        let ext, mime;
+        let ext, mime; // string - File extension and MIME type
         if (data instanceof Blob) {
             mime = data.type;
             ext = utils.mime2ext(mime);
@@ -150,8 +179,15 @@ export default class jEpub {
         return this;
     }
 
+    /**
+     * Add an image to the book
+     * @param {Blob | ArrayBuffer} data - Image data as Blob or ArrayBuffer
+     * @param {string} name - Name for the image file
+     * @returns {jEpub} - Returns this instance for method chaining
+     * @throws {string} - Throws error if image data is invalid
+     */
     image(data, name) {
-        let ext, mime;
+        let ext, mime; // string - File extension and MIME type
         if (data instanceof Blob) {
             mime = data.type;
             ext = utils.mime2ext(mime);
@@ -164,7 +200,7 @@ export default class jEpub {
         }
         if (!ext) throw 'Image data is not allowed';
 
-        const filePath = `assets/${name}.${ext}`;
+        const filePath = `assets/${name}.${ext}`; // string - File path for the image
         this._Images[name] = {
             type: mime,
             path: filePath,
@@ -173,6 +209,12 @@ export default class jEpub {
         return this;
     }
 
+    /**
+     * Add notes to the book
+     * @param {string} content - HTML content for the notes
+     * @returns {jEpub} - Returns this instance for method chaining
+     * @throws {string} - Throws error if notes content is empty
+     */
     notes(content) {
         if (utils.isEmpty(content)) {
             throw 'Notes is empty';
@@ -194,6 +236,14 @@ export default class jEpub {
         }
     }
 
+    /**
+     * Add a page to the book
+     * @param {string} title - Title of the page
+     * @param {string | Array} content - HTML content for the page or array of content
+     * @param {number} index - Index position for the page (defaults to end of pages array)
+     * @returns {jEpub} - Returns this instance for method chaining
+     * @throws {string} - Throws error if title or content is empty
+     */
     add(title, content, index = this._Pages.length) {
         if (utils.isEmpty(title)) {
             throw 'Title is empty';
@@ -202,6 +252,7 @@ export default class jEpub {
         } else {
             if (!Array.isArray(content)) {
                 const template = ejs.compile(content, {
+                    // Function - Compiled EJS template
                     client: true,
                 });
                 content = template(
@@ -209,6 +260,7 @@ export default class jEpub {
                         image: this._Images,
                     },
                     (data) => {
+                        // Function - Image callback function
                         return `<img src="${
                             data
                                 ? data.path
@@ -237,11 +289,18 @@ export default class jEpub {
         }
     }
 
+    /**
+     * Generate the EPUB file
+     * @param {string} type - Output type ('blob', 'arraybuffer', 'uint8array', etc.)
+     * @param {Function} onUpdate - Optional callback function for progress updates
+     * @returns {Promise} - Promise that resolves to the generated EPUB file
+     * @throws {string} - Throws error if browser doesn't support the specified type
+     */
     generate(type = 'blob', onUpdate) {
         if (!JSZip.support[type]) throw `This browser does not support ${type}`;
 
-        let notes = this._Zip.file('OEBPS/notes.html');
-        notes = !notes ? false : true;
+        let notes = this._Zip.file('OEBPS/notes.html'); // JSZip.JSZipObject | null - Notes file reference
+        notes = !notes ? false : true; // boolean - Whether notes exist
 
         this._Zip.file(
             'book.opf',

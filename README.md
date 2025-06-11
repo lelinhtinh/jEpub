@@ -5,6 +5,16 @@
 
 Simple EPUB builder library, works in modern browsers.
 
+## Features
+
+- 📚 Create EPUB books programmatically in browsers
+- 🔧 Simple and intuitive API
+- 🏷️ Full TypeScript support with type definitions
+- 🌐 Internationalization support (21+ languages)
+- 📱 Modern ES modules and UMD builds
+- 🖼️ Image and cover support
+- 📝 HTML content with EJS templating
+
 ## Demo
 
 1. [/demo](https://lelinhtinh.github.io/jEpub/demo/)
@@ -39,12 +49,12 @@ For ES modules:
 </script>
 ```
 
-## Dependencies
+### Dependencies
 
 jEpub requires [JSZip](https://github.com/Stuk/jszip) and
 [EJS](https://github.com/mde/ejs) as **external dependencies**.
 
-⚠️ **Important**: Starting from v2.1.4, JSZip and EJS are **not bundled** with
+⚠️ **Important**: Starting from v2+, JSZip and EJS are **not bundled** with
 jEpub. You need to include them separately.
 
 ### For UMD builds (browser usage)
@@ -82,118 +92,168 @@ const jepub = new jEpub();
 // do something
 ```
 
-## Usage
+### TypeScript Support
+
+jEpub includes full TypeScript type definitions. No additional `@types` packages
+needed!
+
+```typescript
+import jEpub, { jEpubInitDetails, jEpubGenerateType } from 'jepub';
+
+const details: jEpubInitDetails = {
+  i18n: 'en',
+  title: 'My Book',
+  author: 'Author Name',
+  publisher: 'Publisher',
+  description: '<b>Book</b> description',
+  tags: ['epub', 'typescript'],
+};
+
+const jepub = new jEpub();
+jepub.init(details);
+
+// Type-safe generate method
+const epub: Promise<Blob> = jepub.generate('blob');
+```
+
+## API Reference
+
+### Constructor
 
 ```typescript
 const jepub = new jEpub();
+```
+
+### Methods
+
+#### `init(details: jEpubInitDetails | JSZip): this`
+
+Initialize the EPUB with book details or existing JSZip instance.
+
+```typescript
+interface jEpubInitDetails {
+  i18n?: string; // Language code (e.g., 'en', 'fr', 'de', 'ja', 'ar' - supports 21+ languages)
+  title?: string; // Book title
+  author?: string; // Book author
+  publisher?: string; // Book publisher
+  description?: string; // Book description (supports HTML)
+  tags?: string[]; // Book tags/categories
+}
+
 jepub.init({
-  i18n: 'en', // Internationalization
+  i18n: 'en',
   title: 'Book title',
   author: 'Book author',
   publisher: 'Book publisher',
-  description: '<b>Book</b> description', // optional
-  tags: ['epub', 'tag'], // optional
+  description: '<b>Book</b> description',
+  tags: ['epub', 'tag'],
 });
 ```
 
-- **i18n** only include the language codes defined in
-  [`i18n.json`](https://github.com/lelinhtinh/jEpub/blob/master/src/i18n.json)
-- **description**: HTML string.
-- **tags**: Array.
+#### `date(date: Date): this`
 
-### Set published date
+Set custom publication date.
 
 ```typescript
-jepub.date(date: object)
+jepub.date(new Date());
 ```
 
-- **date**: Date Object.
+#### `uuid(id: string): this`
 
-### Set identifier
+Set custom UUID for the book.
 
 ```typescript
-jepub.uuid(id: string | number)
+jepub.uuid('unique-book-id');
 ```
 
-- **id**: Unique id.
+#### `cover(data: Blob | ArrayBuffer): this`
 
-### Add cover
+Add cover image to the book.
 
 ```typescript
-jepub.cover(data: object)
+// From file input
+const fileInput = document.querySelector(
+  'input[type="file"]'
+) as HTMLInputElement;
+const file = fileInput.files?.[0];
+if (file) {
+  jepub.cover(file);
+}
+
+// From fetch
+const response = await fetch('cover.jpg');
+const arrayBuffer = await response.arrayBuffer();
+jepub.cover(arrayBuffer);
 ```
 
-- **data**: A Blob or an ArrayBuffer object from XMLHttpRequest.
+#### `image(data: Blob | ArrayBuffer, name: string): this`
 
-### Add notes
+Add an image to the book.
 
 ```typescript
-jepub.notes(content: string)
+const response = await fetch('image.jpg');
+const arrayBuffer = await response.arrayBuffer();
+jepub.image(arrayBuffer, 'myImage');
 ```
 
-- **content**: HTML string.
+Use in content: `<%= image['myImage'] %>`
 
-### Add chapter `*`
+#### `notes(content: string): this`
+
+Add notes page to the book.
 
 ```typescript
-jepub.add(title: string, content: string | array, index?:number)
+jepub.notes('<p>These are my notes...</p>');
 ```
 
-- **title**: Plain text.
-- **content**:
-  - `string`: HTML string.
-  - `array`: Plain text for each item.
-- **index**: Item index.
+#### `add(title: string, content: string | string[], index?: number): this`
 
-### Add image
+Add a page/chapter to the book.
 
 ```typescript
-jepub.image(data: object, IMG_ID: string)
+// HTML content
+jepub.add('Chapter 1', '<h1>Chapter Title</h1><p>Content...</p>');
+
+// With images
+jepub.add('Chapter 2', '<p>Image: <%= image["myImage"] %></p>');
+
+// Array of strings
+jepub.add('Chapter 3', ['Line 1', 'Line 2', 'Line 3']);
+
+// With specific index
+jepub.add('Preface', '<p>Preface content</p>', 0);
 ```
 
-- **data**: A Blob or an ArrayBuffer object from XMLHttpRequest.
-- **IMG_ID**: Unique id.
+#### `generate(type?: jEpubGenerateType, onUpdate?: jEpubUpdateCallback): Promise<Blob | ArrayBuffer | Uint8Array | Buffer>`
 
-Place `<%= image[IMG_ID] %>` inside the chapter's content _(HTML string only)_,
-where you want to display it.
-
-### Generate EPUB `*`
+Generate the EPUB file.
 
 ```typescript
-jepub.generate(type = 'blob', onUpdate?: metadata => void)
+type jEpubGenerateType = 'blob' | 'arraybuffer' | 'uint8array' | 'nodebuffer';
+
+// Generate as Blob (default)
+const epub: Blob = await jepub.generate();
+
+// Generate as ArrayBuffer
+const buffer: ArrayBuffer = await jepub.generate('arraybuffer');
+
+// With progress callback
+const epub = await jepub.generate('blob', (metadata) => {
+  console.log(`Progress: ${metadata.percent}% - ${metadata.currentFile}`);
+});
 ```
 
-- **type**: The type of EPUB to return. See
-  [JSZip type option](https://stuk.github.io/jszip/documentation/api_jszip/generate_async.html#type-option).
-- **onUpdate**: _(optional)_ Callback function. See
-  [JSZip onUpdate callback](https://stuk.github.io/jszip/documentation/api_jszip/generate_async.html#onupdate-callback).
+### Static Methods
 
-### Static methods `+`
+#### `jEpub.html2text(html: string, noBr?: boolean): string`
 
-#### Convert HTML to text
+Convert HTML to plain text.
 
 ```typescript
-jEpub.html2text(html: string, noBr = false)
-```
-
-- **html**: HTML string.
-- **noBr**: Boolean. Add line break after Block-level elements.
-
-## Development
-
-```bash
-npm run dev
-```
-
-Builds are created using [Vite](https://vitejs.dev/) for modern JavaScript
-development.
-
-```bash
-npm run build
+const text = jEpub.html2text('<b>Bold</b> text', false);
+// Returns: "Bold text"
 ```
 
 ## License
 
 [ISC](./LICENSE). Copyright 2018 [lelinhtinh](https://github.com/lelinhtinh)
-
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2Flelinhtinh%2FjEpub.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2Flelinhtinh%2FjEpub?ref=badge_large)
