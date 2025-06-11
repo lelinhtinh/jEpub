@@ -1,0 +1,16 @@
+{
+  "name": "jepub-es-modules-example",
+  "version": "1.0.0",
+  "description": "Example of using jEpub with ES modules",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "node --watch index.js"
+  },
+  "dependencies": {
+    "jepub": "file:../../",
+    "jszip": "^3.10.1",
+    "ejs": "^3.1.10"
+  }
+}

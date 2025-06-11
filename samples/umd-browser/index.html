@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>jEpub UMD Browser Example</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                max-width: 800px;
+                margin: 0 auto;
+                padding: 20px;
+                background-color: #f5f5f5;
+            }
+            .container {
+                background: white;
+                padding: 30px;
+                border-radius: 10px;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            }
+            h1 {
+                color: #333;
+                text-align: center;
+                margin-bottom: 30px;
+            }
+            .form-group {
+                margin-bottom: 20px;
+            }
+            label {
+                display: block;
+                margin-bottom: 5px;
+                font-weight: bold;
+                color: #555;
+            }
+            input,
+            textarea {
+                width: 100%;
+                padding: 10px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                font-size: 14px;
+                box-sizing: border-box;
+            }
+            textarea {
+                height: 120px;
+                resize: vertical;
+            }
+            button {
+                background: #007bff;
+                color: white;
+                padding: 12px 30px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                font-size: 16px;
+                margin-right: 10px;
+                margin-bottom: 10px;
+            }
+            button:hover {
+                background: #0056b3;
+            }
+            button:disabled {
+                background: #ccc;
+                cursor: not-allowed;
+            }
+            .progress {
+                margin-top: 20px;
+                padding: 10px;
+                background: #f8f9fa;
+                border-radius: 5px;
+                display: none;
+            }
+            .progress-bar {
+                width: 100%;
+                height: 20px;
+                background: #e9ecef;
+                border-radius: 10px;
+                overflow: hidden;
+            }
+            .progress-fill {
+                height: 100%;
+                background: #28a745;
+                width: 0%;
+                transition: width 0.3s ease;
+            }
+            .status {
+                margin-top: 10px;
+                padding: 10px;
+                border-radius: 5px;
+            }
+            .status.success {
+                background: #d4edda;
+                color: #155724;
+                border: 1px solid #c3e6cb;
+            }
+            .status.error {
+                background: #f8d7da;
+                color: #721c24;
+                border: 1px solid #f5c6cb;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <h1>📚 jEpub UMD Browser Example</h1>
+            <p>
+                This example demonstrates how to use jEpub library with UMD
+                build in a browser environment.
+            </p>
+
+            <form id="epubForm">
+                <div class="form-group">
+                    <label for="title">Book Title:</label>
+                    <input
+                        type="text"
+                        id="title"
+                        value="My Sample Book"
+                        required
+                    />
+                </div>
+
+                <div class="form-group">
+                    <label for="author">Author:</label>
+                    <input type="text" id="author" value="John Doe" required />
+                </div>
+
+                <div class="form-group">
+                    <label for="publisher">Publisher:</label>
+                    <input
+                        type="text"
+                        id="publisher"
+                        value="Sample Publisher"
+                    />
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description:</label>
+                    <textarea
+                        id="description"
+                        placeholder="Enter book description..."
+                    >
+A sample EPUB book created with <b>jEpub</b> library using UMD build in browser.</textarea
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="tags">Tags (comma-separated):</label>
+                    <input
+                        type="text"
+                        id="tags"
+                        value="sample, epub, javascript, umd"
+                        placeholder="tag1, tag2, tag3"
+                    />
+                </div>
+
+                <div class="form-group">
+                    <label for="coverImage">Cover Image:</label>
+                    <input type="file" id="coverImage" accept="image/*" />
+                </div>
+
+                <div class="form-group">
+                    <label for="contentImage">Content Image (optional):</label>
+                    <input type="file" id="contentImage" accept="image/*" />
+                </div>
+
+                <button type="submit">📖 Generate EPUB</button>
+                <button type="button" id="addChapterBtn">
+                    ➕ Add Sample Chapter
+                </button>
+            </form>
+
+            <div class="progress" id="progress">
+                <div>Generating EPUB...</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <div id="progressText">0%</div>
+            </div>
+
+            <div id="status"></div>
+        </div>
+
+        <!-- External Dependencies -->
+        <script src="https://unpkg.com/jszip/dist/jszip.min.js"></script>
+        <script src="https://unpkg.com/ejs/ejs.min.js"></script>
+
+        <!-- jEpub UMD Build -->
+        <script src="../../dist/jepub.js"></script>
+
+        <script>
+            let jepub = null;
+            let chapterCount = 0;
+
+            document
+                .getElementById('epubForm')
+                .addEventListener('submit', async function (e) {
+                    e.preventDefault();
+                    await generateEpub();
+                });
+
+            document
+                .getElementById('addChapterBtn')
+                .addEventListener('click', function () {
+                    addSampleChapter();
+                });
+
+            function showStatus(message, type = 'success') {
+                const statusDiv = document.getElementById('status');
+                statusDiv.innerHTML = `<div class="status ${type}">${message}</div>`;
+            }
+
+            function showProgress(show = true) {
+                const progressDiv = document.getElementById('progress');
+                progressDiv.style.display = show ? 'block' : 'none';
+            }
+
+            function updateProgress(percent, currentFile = '') {
+                const progressFill = document.getElementById('progressFill');
+                const progressText = document.getElementById('progressText');
+                progressFill.style.width = percent + '%';
+                progressText.textContent = `${Math.round(percent)}% - ${currentFile}`;
+            }
+
+            async function generateEpub() {
+                try {
+                    showStatus('', '');
+                    showProgress(true);
+                    updateProgress(0, 'Initializing...');
+
+                    // Initialize jEpub
+                    jepub = new jEpub();
+
+                    const formData = new FormData(
+                        document.getElementById('epubForm')
+                    );
+                    const tags = document
+                        .getElementById('tags')
+                        .value.split(',')
+                        .map((tag) => tag.trim())
+                        .filter((tag) => tag.length > 0);
+
+                    // Initialize book details
+                    jepub.init({
+                        i18n: 'en',
+                        title: document.getElementById('title').value,
+                        author: document.getElementById('author').value,
+                        publisher: document.getElementById('publisher').value,
+                        description:
+                            document.getElementById('description').value,
+                        tags: tags,
+                    });
+
+                    updateProgress(20, 'Book initialized...');
+
+                    // Add cover image if provided
+                    const coverImageFile =
+                        document.getElementById('coverImage').files[0];
+                    if (coverImageFile) {
+                        const coverArrayBuffer =
+                            await coverImageFile.arrayBuffer();
+                        jepub.cover(coverArrayBuffer);
+                        updateProgress(40, 'Cover image added...');
+                    }
+
+                    // Add content image if provided
+                    const contentImageFile =
+                        document.getElementById('contentImage').files[0];
+                    if (contentImageFile) {
+                        const imageArrayBuffer =
+                            await contentImageFile.arrayBuffer();
+                        jepub.image(imageArrayBuffer, 'contentImage');
+                        updateProgress(50, 'Content image added...');
+                    }
+
+                    // Add introduction chapter
+                    let introContent =
+                        '<h1>Introduction</h1><p>Welcome to this sample EPUB book created with jEpub!</p>';
+                    introContent +=
+                        '<p>This book was generated using the UMD build of jEpub in a browser environment.</p>';
+
+                    if (contentImageFile) {
+                        introContent +=
+                            '<p>Here is the image you uploaded:</p>';
+                        introContent += '<%= image["contentImage"] %>';
+                    }
+
+                    jepub.add('Introduction', introContent);
+                    updateProgress(60, 'Introduction chapter added...');
+
+                    // Add additional chapters if any were created
+                    for (let i = 1; i <= chapterCount; i++) {
+                        const chapterContent = `
+                        <h1>Chapter ${i}</h1>
+                        <p>This is the content of chapter ${i}. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                        <p>Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.</p>
+                        <h2>Section ${i}.1</h2>
+                        <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+                        <h2>Section ${i}.2</h2>
+                        <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                    `;
+                        jepub.add(`Chapter ${i}`, chapterContent);
+                        updateProgress(60 + i * 10, `Chapter ${i} added...`);
+                    }
+
+                    // Add notes
+                    jepub.notes(
+                        '<p>These are sample notes for the EPUB book.</p><p>Generated with jEpub UMD build.</p>'
+                    );
+                    updateProgress(80, 'Notes added...');
+
+                    // Generate EPUB
+                    updateProgress(85, 'Generating EPUB file...');
+                    const epub = await jepub.generate('blob', (metadata) => {
+                        updateProgress(
+                            85 + metadata.percent * 0.15,
+                            metadata.currentFile
+                        );
+                    });
+
+                    // Download the file
+                    const url = URL.createObjectURL(epub);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `${document
+                        .getElementById('title')
+                        .value.replace(/[^a-z0-9]/gi, '_')
+                        .toLowerCase()}.epub`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+
+                    updateProgress(100, 'Complete!');
+                    setTimeout(() => {
+                        showProgress(false);
+                        showStatus(
+                            '✅ EPUB generated and downloaded successfully!',
+                            'success'
+                        );
+                    }, 1000);
+                } catch (error) {
+                    showProgress(false);
+                    showStatus(`❌ Error: ${error.message}`, 'error');
+                    console.error('Error generating EPUB:', error);
+                }
+            }
+
+            function addSampleChapter() {
+                chapterCount++;
+                showStatus(
+                    `📝 Chapter ${chapterCount} will be added when generating EPUB`,
+                    'success'
+                );
+            }
+        </script>
+    </body>
+</html>
