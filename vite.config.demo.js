@@ -35,7 +35,7 @@ export default defineConfig({
         global: 'globalThis', // For EJS compatibility
     },
     optimizeDeps: {
-        include: ['ejs', 'jszip', 'image-type'],
+        include: ['ejs', 'jszip', 'image-type', 'jsdom'],
     },
 
     // No build needed - demo uses source files directly

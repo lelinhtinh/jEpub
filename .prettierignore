@@ -31,7 +31,6 @@ Thumbs.db
 .cache/
 
 # Config files that should maintain specific formatting
-*.config.js
 jsconfig.json
 tsconfig.json
 
