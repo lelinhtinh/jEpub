@@ -188,7 +188,6 @@ describe('jEpub Advanced Features', () => {
             ).not.toThrow();
         });
     });
-
     describe('Edge Case Content', () => {
         beforeEach(() => {
             epub.init(TEST_CONSTANTS.SAMPLE_EPUB_CONFIG);
@@ -196,9 +195,10 @@ describe('jEpub Advanced Features', () => {
 
         it('should handle content with only whitespace', () => {
             const whitespaceContent = '   \n\t   \r\n   ';
+            // Now empty content is allowed
             expect(() =>
                 epub.add('Whitespace Test', whitespaceContent)
-            ).toThrow();
+            ).not.toThrow();
         });
 
         it('should handle content with mixed line endings', () => {
@@ -221,6 +221,46 @@ describe('jEpub Advanced Features', () => {
             expect(() =>
                 epub.add('Self-Closing Tags', selfClosingContent)
             ).not.toThrow();
+        });
+    });
+
+    describe('Hierarchical TOC Support', () => {
+        it('should support hierarchical TOC structure', () => {
+            epub.init(TEST_CONSTANTS.SAMPLE_EPUB_CONFIG);
+
+            // Create a basic hierarchy
+            expect(() =>
+                epub.add('Main Chapter 1', '<p>Content</p>', 0)
+            ).not.toThrow();
+            expect(() =>
+                epub.add('Sub Chapter 1.1', '<p>Content</p>', 1)
+            ).not.toThrow();
+            expect(() =>
+                epub.add('Sub Chapter 1.2', '<p>Content</p>', 1)
+            ).not.toThrow();
+            expect(() =>
+                epub.add('Main Chapter 2', '<p>Content</p>', 0)
+            ).not.toThrow();
+
+            expect(epub._Pages.length).toBe(4);
+            expect(epub._Pages[0].level).toBe(0);
+            expect(epub._Pages[1].level).toBe(1);
+            expect(epub._Pages[2].level).toBe(1);
+            expect(epub._Pages[3].level).toBe(0);
+        });
+
+        it('should handle deep nesting levels', () => {
+            epub.init(TEST_CONSTANTS.SAMPLE_EPUB_CONFIG);
+
+            epub.add('Level 0', '<p>Content</p>', 0);
+            epub.add('Level 1', '<p>Content</p>', 1);
+            epub.add('Level 2', '<p>Content</p>', 2);
+            epub.add('Level 3', '<p>Content</p>', 3);
+
+            expect(epub._Pages.length).toBe(4);
+            for (let i = 0; i < 4; i++) {
+                expect(epub._Pages[i].level).toBe(i);
+            }
         });
     });
 });

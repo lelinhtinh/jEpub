@@ -154,17 +154,11 @@ describe('jEpub Error Handling', () => {
             expect(() => epub.add(null, 'content')).toThrow('Title is empty');
             // Note: undefined is not handled by isEmpty in utils.js
         });
-        it('should reject empty content', () => {
-            expect(() => epub.add('Title', '')).toThrow(
-                'Content of Title is empty'
-            );
-            expect(() => epub.add('Title', '   ')).toThrow(
-                'Content of Title is empty'
-            );
-            expect(() => epub.add('Title', null)).toThrow(
-                'Content of Title is empty'
-            );
-            // Note: undefined causes different error in template processing
+        it('should allow empty content', () => {
+            // Content can now be empty
+            expect(() => epub.add('Title', '')).not.toThrow();
+            expect(() => epub.add('Title', '   ')).not.toThrow();
+            expect(() => epub.add('Title', null)).not.toThrow();
         });
         it('should handle invalid template content gracefully', () => {
             // Template with undefined variable - EJS will throw ReferenceError

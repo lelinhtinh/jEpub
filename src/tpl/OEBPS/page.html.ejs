@@ -12,15 +12,17 @@
 		<div class="chapter-title-wrap">
 			<h2 class="chapter-title"><%= title %></h2>
 		</div>
-		<div class="ugc chapter-ugc">
-            <% if (Array.isArray(content)) { %>
-                <% content.forEach(item => { %>
-                    <p class="indent"><%= item %></p>
-                <% }); %>
-            <% } else { %>
-                <%- content %>
-            <% } %>
-		</div>
+        <% if (content) { %>
+            <div class="ugc chapter-ugc">
+                <% if (Array.isArray(content)) { %>
+                    <% content.forEach(item => { %>
+                        <p class="indent"><%= item %></p>
+                    <% }); %>
+                <% } else { %>
+                    <%- content %>
+                <% } %>
+            </div>
+        <% } %>
 	</div>
 </body>
 

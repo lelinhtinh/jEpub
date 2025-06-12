@@ -30,14 +30,25 @@
 			</navLabel>
 			<content src="OEBPS/table-of-contents.html" />
 		</navPoint>
-        <% pages.forEach((title, index) => { %>
+        <% let currentLevel = -1; %>
+        <% pages.forEach(({title,level}, index) => { %>
+            <% if (level <= currentLevel) { %>
+                <% for (let i = currentLevel; i >= level; i--) { %>
+                    </navPoint>
+                <% } %>
+            <% } %>
             <navPoint id="page-<%= index %>" playOrder="<%= (index + 3) %>">
                 <navLabel>
                     <text><%= title %></text>
                 </navLabel>
                 <content src="OEBPS/page-<%= index %>.html" />
-            </navPoint>
+            <% currentLevel = level; %>
         <% }); %>
+        <% if (currentLevel >= 0) { %>
+            <% for (let i = currentLevel; i >= 0; i--) { %>
+                </navPoint>
+            <% } %>
+        <% } %>
         <% if (notes) { %>
             <navPoint id="notes-page" playOrder="2">
                 <navLabel>

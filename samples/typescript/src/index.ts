@@ -28,7 +28,6 @@ console.log('===========================\n');
 interface BookChapter {
     title: string;
     content: string;
-    order: number;
     tags?: string[];
     wordCount?: number;
 }
@@ -242,7 +241,6 @@ jepub.init(bookDetails);</code></pre>
         return {
             title: `Advanced TypeScript Features`,
             content,
-            order: chapterNumber,
             tags: ['typescript', 'programming', 'type-safety'],
             wordCount,
         };
@@ -318,7 +316,6 @@ interface jEpubImage {
         return {
             title: 'Image Integration with TypeScript',
             content,
-            order: 100,
             tags: ['images', 'typescript', 'type-safety'],
             wordCount: content.split(/\s+/).length,
         };
@@ -492,7 +489,6 @@ class TypeScriptEpubGenerator {
         const introChapter: BookChapter = {
             title: 'Introduction to TypeScript EPUB Generation',
             content: this.generateIntroContent(),
-            order: 1,
             tags: ['introduction', 'typescript', 'epub'],
             wordCount: 0, // Will be calculated
         };
@@ -502,7 +498,6 @@ class TypeScriptEpubGenerator {
         // TypeScript features chapters
         for (let i = 2; i <= 4; i++) {
             const chapter = ContentGenerator.generateTypeScriptChapter(i);
-            chapter.order = i;
             this.chapters.push(chapter);
         }
 
@@ -510,14 +505,12 @@ class TypeScriptEpubGenerator {
         const imageChapter = ContentGenerator.generateImageChapter(
             this.imageManager
         );
-        imageChapter.order = 5;
         this.chapters.push(imageChapter);
 
         // Configuration and best practices chapter
         const configChapter: BookChapter = {
             title: 'Configuration and Best Practices',
             content: this.generateConfigContent(),
-            order: 6,
             tags: ['configuration', 'best-practices', 'typescript'],
             wordCount: 0,
         };
@@ -526,7 +519,7 @@ class TypeScriptEpubGenerator {
 
         // Add all chapters to the EPUB
         this.chapters.forEach((chapter) => {
-            this.jepub.add(chapter.title, chapter.content, chapter.order - 1);
+            this.jepub.add(chapter.title, chapter.content);
             console.log(
                 `📄 Chapter added: ${chapter.title} (${chapter.wordCount} words)`
             );

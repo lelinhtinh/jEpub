@@ -11,13 +11,28 @@
 	<div id="toc">
 		<h1><%= i18n.toc %></h1>
 		<ul>
-            <% pages.forEach((title, index) => { %>
+            <% let currentLevel = 0; %>
+            <% pages.forEach(({title,level}, index) => { %>
+                <% if (level > currentLevel) { %>
+                    <ul>
+                <% } %>
                 <li class="chaptertype-1">
                     <a href="page-<%= index %>.html">
                         <span class="toc-chapter-title"><%= title %></span>
                     </a>
                 </li>
+                <% if (level < currentLevel) { %>
+                    <% for (let i = currentLevel; i > level; i--) { %>
+                        </ul>
+                    <% } %>
+                <% } %>
+                <% currentLevel = level; %>
             <% }); %>
+            <% if (currentLevel > 0) { %>
+                <% for (let i = currentLevel; i > 0; i--) { %>
+                    </ul>
+                <% } %>
+            <% } %>
 		</ul>
 	</div>
 </body>

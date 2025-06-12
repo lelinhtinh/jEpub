@@ -133,11 +133,15 @@ export default class jEpub {
      * Add a page/chapter to the book
      * @param title Page title
      * @param content Page content (supports HTML and EJS templates)
-     * @param index Optional index position for the page
+     * @param level Hierarchy level of the page
      * @returns jEpub instance for method chaining
-     * @throws Error if title or content is empty
+     * @throws Error if title is empty or level is invalid
      */
-    add(title: string, content: string | string[], index?: number): this;
+    add(
+        title: string,
+        content?: string | string[] | null,
+        level?: number
+    ): this;
 
     /**
      * Generate the EPUB file

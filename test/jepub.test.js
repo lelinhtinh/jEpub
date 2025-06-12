@@ -256,7 +256,7 @@ describe('jEpub Class', () => {
             const result = epub.add(title, content);
 
             expect(result).toBe(epub);
-            expect(epub._Pages[0]).toBe(title);
+            expect(epub._Pages[0].title).toBe(title);
 
             // Verify page file was added to zip
             const pageFile = epub._Zip.file('OEBPS/page-0.html');
@@ -265,12 +265,12 @@ describe('jEpub Class', () => {
 
         it('should add page at specific index', () => {
             epub.add('Chapter 1', '<p>Content 1</p>');
-            epub.add('Chapter 3', '<p>Content 3</p>', 2);
-            epub.add('Chapter 2', '<p>Content 2</p>', 1);
+            epub.add('Chapter 2', '<p>Content 2</p>');
+            epub.add('Chapter 3', '<p>Content 3</p>');
 
-            expect(epub._Pages[0]).toBe('Chapter 1');
-            expect(epub._Pages[1]).toBe('Chapter 2');
-            expect(epub._Pages[2]).toBe('Chapter 3');
+            expect(epub._Pages[0].title).toBe('Chapter 1');
+            expect(epub._Pages[1].title).toBe('Chapter 2');
+            expect(epub._Pages[2].title).toBe('Chapter 3');
         });
         it('should process template content with images', () => {
             // First add an image
@@ -285,7 +285,7 @@ describe('jEpub Class', () => {
                 '<p>Here is an image: <% if (image["test-img"]) { %><img src="<%= image["test-img"].path %>" alt="test image"><% } %></p>';
             epub.add('Image Chapter', templateContent);
 
-            expect(epub._Pages[0]).toBe('Image Chapter');
+            expect(epub._Pages[0].title).toBe('Image Chapter');
         });
 
         it('should throw error for empty title', () => {
@@ -293,13 +293,86 @@ describe('jEpub Class', () => {
             expect(() => epub.add(null, 'content')).toThrow('Title is empty');
         });
 
-        it('should throw error for empty content', () => {
-            expect(() => epub.add('Title', '')).toThrow(
-                'Content of Title is empty'
-            );
-            expect(() => epub.add('Title', null)).toThrow(
-                'Content of Title is empty'
-            );
+        it('should allow empty content', () => {
+            expect(() => epub.add('Title', '')).not.toThrow();
+            expect(() => epub.add('Title', null)).not.toThrow();
+        });
+
+        describe('Hierarchical TOC', () => {
+            it('should add pages with different hierarchy levels', () => {
+                epub.add('Main Chapter 1', '<p>Content</p>', 0);
+                epub.add('Sub Chapter 1.1', '<p>Content</p>', 1);
+                epub.add('Sub Chapter 1.2', '<p>Content</p>', 1);
+                epub.add('Main Chapter 2', '<p>Content</p>', 0);
+                epub.add('Sub Chapter 2.1', '<p>Content</p>', 1);
+                epub.add('Sub Sub Chapter 2.1.1', '<p>Content</p>', 2);
+
+                expect(epub._Pages.length).toBe(6);
+                expect(epub._Pages[0].title).toBe('Main Chapter 1');
+                expect(epub._Pages[0].level).toBe(0);
+                expect(epub._Pages[1].title).toBe('Sub Chapter 1.1');
+                expect(epub._Pages[1].level).toBe(1);
+                expect(epub._Pages[2].title).toBe('Sub Chapter 1.2');
+                expect(epub._Pages[2].level).toBe(1);
+                expect(epub._Pages[3].title).toBe('Main Chapter 2');
+                expect(epub._Pages[3].level).toBe(0);
+                expect(epub._Pages[4].title).toBe('Sub Chapter 2.1');
+                expect(epub._Pages[4].level).toBe(1);
+                expect(epub._Pages[5].title).toBe('Sub Sub Chapter 2.1.1');
+                expect(epub._Pages[5].level).toBe(2);
+            });
+
+            it('should default to level 0 when level is not specified', () => {
+                epub.add('Chapter 1', '<p>Content</p>');
+                epub.add('Chapter 2', '<p>Content</p>');
+
+                expect(epub._Pages[0].level).toBe(0);
+                expect(epub._Pages[1].level).toBe(0);
+            });
+
+            it('should throw error when level increases by more than 1', () => {
+                epub.add('Level 0 Chapter', '<p>Content</p>', 0);
+
+                // Trying to skip level 1 and go directly to level 2
+                expect(() =>
+                    epub.add('Level 2 Chapter', '<p>Content</p>', 2)
+                ).toThrow(
+                    'Invalid TOC hierarchy: Level can only increase by 1 (from 0 to 1)'
+                );
+            });
+
+            it('should allow valid level progressions', () => {
+                expect(() =>
+                    epub.add('Level 0 Chapter', '<p>Content</p>', 0)
+                ).not.toThrow();
+                expect(() =>
+                    epub.add('Level 1 Chapter', '<p>Content</p>', 1)
+                ).not.toThrow();
+                expect(() =>
+                    epub.add('Another Level 1', '<p>Content</p>', 1)
+                ).not.toThrow();
+                expect(() =>
+                    epub.add('Level 2 Chapter', '<p>Content</p>', 2)
+                ).not.toThrow();
+                expect(() =>
+                    epub.add('Back to Level 0', '<p>Content</p>', 0)
+                ).not.toThrow();
+            });
+
+            it('should reject negative level values', () => {
+                expect(() =>
+                    epub.add('Negative Level', '<p>Content</p>', -1)
+                ).toThrow('Level must be a non-negative number');
+            });
+
+            it('should reject non-numeric level values', () => {
+                expect(() =>
+                    epub.add('String Level', '<p>Content</p>', 'level')
+                ).toThrow('Level must be a non-negative number');
+                expect(() =>
+                    epub.add('NaN Level', '<p>Content</p>', NaN)
+                ).toThrow('Level must be a non-negative number');
+            });
         });
     });
 
@@ -372,7 +445,7 @@ describe('jEpub Class', () => {
             expect(epub._Info.title).toBe('Test Book');
             expect(epub._Date).toBe('2023-01-01T00:00:00.000Z');
             expect(epub._Uuid.id).toBe('test-uuid');
-            expect(epub._Pages[0]).toBe('Chapter 1');
+            expect(epub._Pages[0].title).toBe('Chapter 1');
         });
     });
 });

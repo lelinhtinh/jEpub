@@ -239,54 +239,63 @@ export default class jEpub {
     /**
      * Add a page to the book
      * @param {string} title - Title of the page
-     * @param {string | Array} content - HTML content for the page or array of content
-     * @param {number} index - Index position for the page (defaults to end of pages array)
+     * @param {string | Array | null} content - HTML content for the page or array of content
+     * @param {number} level - Hierarchy level of the page
      * @returns {jEpub} - Returns this instance for method chaining
-     * @throws {string} - Throws error if title or content is empty
+     * @throws {string} - Throws error if title is empty or level is invalid
      */
-    add(title, content, index = this._Pages.length) {
+    add(title, content = null, level = 0) {
         if (utils.isEmpty(title)) {
             throw 'Title is empty';
-        } else if (utils.isEmpty(content)) {
-            throw `Content of ${title} is empty`;
-        } else {
-            if (!Array.isArray(content)) {
-                const template = ejs.compile(content, {
-                    // Function - Compiled EJS template
-                    client: true,
-                });
-                content = template(
-                    {
-                        image: this._Images,
-                    },
-                    (data) => {
-                        // Function - Image callback function
-                        return `<img src="${
-                            data
-                                ? data.path
-                                : 'data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs='
-                        }" alt=""></img>`;
-                    }
-                );
-                content = utils.parseDOM(content);
-            }
-            this._Zip.file(
-                `OEBPS/page-${index}.html`,
-                ejs.render(
-                    page,
-                    {
-                        i18n: this._I18n,
-                        title,
-                        content,
-                    },
-                    {
-                        client: true,
-                    }
-                )
-            );
-            this._Pages[index] = title;
-            return this;
         }
+
+        if (typeof level !== 'number' || isNaN(level) || level < 0) {
+            throw 'Level must be a non-negative number';
+        }
+        const lastPage = this._Pages[this._Pages.length - 1];
+        if (lastPage && level > lastPage.level + 1) {
+            throw `Invalid TOC hierarchy: Level can only increase by 1 (from ${lastPage.level} to ${lastPage.level + 1})`;
+        }
+
+        if (content && !Array.isArray(content)) {
+            const template = ejs.compile(content, {
+                client: true,
+            });
+            content = template(
+                {
+                    image: this._Images,
+                },
+                (data) => {
+                    return `<img src="${
+                        data
+                            ? data.path
+                            : 'data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs='
+                    }" alt=""></img>`;
+                }
+            );
+            content = utils.parseDOM(content);
+        }
+
+        const pageId = this._Pages.length;
+        this._Zip.file(
+            `OEBPS/page-${pageId}.html`,
+            ejs.render(
+                page,
+                {
+                    i18n: this._I18n,
+                    title,
+                    content,
+                },
+                {
+                    client: true,
+                }
+            )
+        );
+        this._Pages.push({
+            title,
+            level,
+        });
+        return this;
     }
 
     /**

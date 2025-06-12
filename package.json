@@ -1,13 +1,12 @@
 {
   "name": "jepub",
-  "version": "2.2.0",
+  "version": "2.3.0",
   "description": "Generate simple EPUB books with JavaScript.",
   "main": "dist/jepub.js",
   "module": "dist/jepub.es.js",
   "types": "index.d.ts",
   "type": "module",
   "scripts": {
-    "start": "vite --config vite.config.demo.js",
     "clean": "rimraf dist",
     "build": "vite build",
     "lint": "eslint .",

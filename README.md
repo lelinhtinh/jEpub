@@ -206,13 +206,13 @@ Add notes page to the book.
 jepub.notes('<p>These are my notes...</p>');
 ```
 
-#### `add(title: string, content: string | string[], index?: number): this`
+#### `add(title: string, content?: string | string[] | null, level?: number): this`
 
 Add a page/chapter to the book.
 
 ```typescript
 // HTML content
-jepub.add('Chapter 1', '<h1>Chapter Title</h1><p>Content...</p>');
+jepub.add('Chapter 1', '<p>Content...</p>');
 
 // With images
 jepub.add('Chapter 2', '<p>Image: <%= image["myImage"] %></p>');
@@ -220,8 +220,8 @@ jepub.add('Chapter 2', '<p>Image: <%= image["myImage"] %></p>');
 // Array of strings
 jepub.add('Chapter 3', ['Line 1', 'Line 2', 'Line 3']);
 
-// With specific index
-jepub.add('Preface', '<p>Preface content</p>', 0);
+// With deep level
+jepub.add('Chapter 3.1', '<p>Content...</p>', 1);
 ```
 
 #### `generate(type?: jEpubGenerateType, onUpdate?: jEpubUpdateCallback): Promise<Blob | ArrayBuffer | Uint8Array | Buffer>`
