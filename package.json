@@ -1,6 +1,6 @@
 {
   "name": "jepub",
-  "version": "2.3.0",
+  "version": "2.3.1",
   "description": "Generate simple EPUB books with JavaScript.",
   "main": "dist/jepub.js",
   "module": "dist/jepub.es.js",
@@ -38,7 +38,8 @@
   "license": "ISC",
   "files": [
     "dist/",
-    "index.d.ts"
+    "index.d.ts",
+    "README.md"
   ],
   "bugs": {
     "url": "https://github.com/lelinhtinh/jEpub/issues"
