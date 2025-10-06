@@ -8,7 +8,7 @@ import {
     html2text,
     validateUrl,
     mime2ext,
-} from '../src/utils.js';
+} from '../src/utils/index.js';
 
 describe('Utils Module', () => {
     describe('uuidv4', () => {

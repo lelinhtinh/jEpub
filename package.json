@@ -1,6 +1,6 @@
 {
   "name": "jepub",
-  "version": "2.4.0",
+  "version": "2.5.0",
   "description": "Generate simple EPUB books with JavaScript.",
   "main": "dist/jepub.js",
   "module": "dist/jepub.es.js",
@@ -46,8 +46,7 @@
   },
   "homepage": "https://lelinhtinh.github.io/jEpub/",
   "dependencies": {
-    "@xmldom/xmldom": "^0.8.11",
-    "image-type": "^4.1.0"
+    "@xmldom/xmldom": "^0.8.11"
   },
   "peerDependencies": {
     "ejs": "^3.1.10",

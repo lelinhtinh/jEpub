@@ -2,8 +2,8 @@
 
 import JSZip from 'jszip';
 import ejs from 'ejs';
-import * as utils from './utils';
-import imageType from 'image-type';
+import * as utils from './utils/index.js';
+import { detectImageType } from './utils/mime.js';
 
 import language from './i18n.json';
 
@@ -148,7 +148,7 @@ export default class jEpub {
             mime = data.type;
             ext = utils.mime2ext(mime);
         } else if (data instanceof ArrayBuffer) {
-            ext = imageType(new Uint8Array(data));
+            ext = detectImageType(new Uint8Array(data));
             if (ext) {
                 mime = ext.mime;
                 ext = utils.mime2ext(mime);
@@ -192,7 +192,7 @@ export default class jEpub {
             mime = data.type;
             ext = utils.mime2ext(mime);
         } else if (data instanceof ArrayBuffer) {
-            ext = imageType(new Uint8Array(data));
+            ext = detectImageType(new Uint8Array(data));
             mime = ext.mime;
             if (ext) ext = utils.mime2ext(mime);
         } else {
