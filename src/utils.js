@@ -1,3 +1,8 @@
+import {
+    DOMParser as NodeDOMParser,
+    XMLSerializer as NodeXMLSerializer,
+} from '@xmldom/xmldom';
+
 /**
  * Generates a RFC 4122 version 4 UUID
  * @see https://stackoverflow.com/a/2117523
@@ -65,144 +70,40 @@ export function getISODate(date = new Date()) {
  * @param {boolean} [outText=false] - Return as plain text instead of XHTML
  * @returns {string} Parsed XHTML or plain text
  */
-// Cache for jsdom module
-let jsdomModule = null;
-let jsdomLoadAttempted = false;
-
-/**
- * Lazy load jsdom in Node.js environment
- * @returns {Object|null} jsdom module or null if not available
- */
-function getJSDOM() {
-    if (!jsdomLoadAttempted) {
-        jsdomLoadAttempted = true;
-        try {
-            // Use dynamic require to load jsdom only in Node.js
-            const module = eval('require')('jsdom');
-            jsdomModule = module;
-        } catch {
-            // jsdom not available, will fallback to simple parsing
-            jsdomModule = null;
-        }
-    }
-    return jsdomModule;
-}
-
-// HTML entity map for fallback text conversion
-const HTML_ENTITIES = {
-    '&nbsp;': ' ',
-    '&amp;': '&',
-    '&lt;': '<',
-    '&gt;': '>',
-    '&quot;': '"',
-    '&#39;': "'",
-};
-
-/**
- * Simple HTML to text conversion fallback
- * @param {string} html - HTML string to convert
- * @returns {string} Plain text
- */
-function simpleHtmlToText(html) {
-    let text = html.replace(/<[^>]+>/g, '');
-
-    // Replace HTML entities
-    Object.entries(HTML_ENTITIES).forEach(([entity, replacement]) => {
-        text = text.replace(new RegExp(entity, 'gi'), replacement);
-    });
-
-    return text.trim();
-}
-
-/**
- * Parse DOM using jsdom in Node.js environment
- * @param {string} html - HTML string to parse
- * @param {boolean} outText - Whether to return plain text
- * @returns {string|null} Parsed result or null if failed
- */
-function parseWithJSDOM(html, outText) {
-    const jsdom = getJSDOM();
-
-    if (!jsdom) {
-        return null;
-    }
-
-    try {
-        const { JSDOM } = jsdom;
-        const dom = new JSDOM(`<!doctype html><body>${html}</body>`);
-        const document = dom.window.document;
-
-        if (outText) {
-            return document.body.textContent.trim();
-        }
-
-        // Convert to XHTML-like format
-        const XMLSerializer = dom.window.XMLSerializer;
-        if (XMLSerializer) {
-            const serializer = new XMLSerializer();
-            const doc = serializer.serializeToString(document.body);
-            return doc.replace(/(^<body\s?[^>]*>|<\/body>$)/g, '');
-        }
-
-        // Fallback to innerHTML if XMLSerializer not available
-        return document.body.innerHTML;
-    } catch {
-        return null;
-    }
-}
-
-/**
- * Parse DOM using browser DOMParser
- * @param {string} html - HTML string to parse
- * @param {boolean} outText - Whether to return plain text
- * @returns {string} Parsed result
- */
-function parseWithBrowserDOM(html, outText) {
-    const doc = new DOMParser().parseFromString(
-        `<!doctype html><body>${html}`,
-        'text/html'
-    );
-
-    if (outText) {
-        return doc.body.textContent.trim();
-    }
-
-    const serializedDoc = new XMLSerializer().serializeToString(doc.body);
-    return serializedDoc.replace(/(^<body\s?[^>]*>|<\/body>$)/g, '');
-}
-
-/**
- * Convert HTML to valid XHTML or plain text
- * @param {string} html - HTML string to parse
- * @param {boolean} [outText=false] - Return as plain text instead of XHTML
- * @returns {string} Parsed XHTML or plain text
- */
 export function parseDOM(html, outText = false) {
-    // Validate input
-    if (typeof html !== 'string') {
+    // Handle null, undefined, or non-string inputs
+    if (html == null || typeof html !== 'string') {
         return '';
     }
 
-    // Check if running in Node.js environment
-    if (typeof DOMParser === 'undefined') {
-        // Node.js implementation using jsdom
-        const jsdomResult = parseWithJSDOM(html, outText);
+    // Use global DOM when available (browser/happy-dom) or fallback to xmldom for Node.js
+    const DOMParserToUse =
+        typeof globalThis.DOMParser !== 'undefined'
+            ? globalThis.DOMParser
+            : NodeDOMParser;
+    const XMLSerializerToUse =
+        typeof globalThis.XMLSerializer !== 'undefined'
+            ? globalThis.XMLSerializer
+            : NodeXMLSerializer;
 
-        if (jsdomResult !== null) {
-            return jsdomResult;
-        }
+    const doc = new DOMParserToUse().parseFromString(
+        `<!doctype html><body>${html}</body>`,
+        'text/html'
+    );
 
-        // Fallback: Simple HTML processing without DOM parsing
-        if (outText) {
-            return simpleHtmlToText(html);
-        }
-
-        // For XHTML conversion, return as-is (simplified approach)
-        return html;
+    // For browser environments, use doc.body; for xmldom, use doc.documentElement
+    const bodyElement = doc.body || doc.documentElement;
+    if (!doc || !bodyElement) {
+        return '';
     }
 
-    // Browser implementation using DOMParser
-    return parseWithBrowserDOM(html, outText);
+    if (outText) {
+        return bodyElement.textContent.trim();
+    }
+
+    const serializer = new XMLSerializerToUse();
+    const serializedDoc = serializer.serializeToString(bodyElement);
+    return serializedDoc.replace(/(^<body\s?[^>]*>|<\/body>$)/g, '');
 }
 
 /**

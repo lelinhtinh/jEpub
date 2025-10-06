@@ -69,8 +69,6 @@ use the jEpub library across various environments and module systems.
 
 ```bash
 # Open samples/umd-browser/index.html in a browser
-# Or serve with a local server:
-npx serve samples/umd-browser
 ```
 
 #### ES Modules

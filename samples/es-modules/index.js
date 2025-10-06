@@ -223,29 +223,8 @@ jepub.image(buffer.buffer, 'imageName');</code></pre>
     }
 }
 
-// Helper function to demonstrate static method
-function demonstrateStaticMethods() {
-    console.log('\n🧪 Demonstrating static methods:');
-
-    // Note: html2text uses DOMParser which is not available in Node.js
-    // This static method is primarily designed for browser environments
-    console.log(
-        '   ⚠️ Static method html2text() is not available in Node.js environment'
-    );
-    console.log(
-        '   💡 This method works in browser environments where DOMParser is available'
-    );
-    console.log(
-        '   📚 For HTML to text conversion in Node.js, consider using libraries like:'
-    );
-    console.log('      - jsdom');
-    console.log('      - cheerio');
-    console.log('      - html-to-text');
-}
-
 // Run the example
 async function main() {
-    demonstrateStaticMethods();
     await createSampleEpub();
 
     console.log('\n🎉 ES Modules example completed successfully!');

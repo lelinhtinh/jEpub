@@ -76,7 +76,6 @@ Error handling and edge case tests:
 - MIME type handling
 
 - **`jepub.test.js`** - Unit tests for the main jEpub class
-
   - Constructor initialization
   - Method functionality
   - Input validation
@@ -84,7 +83,6 @@ Error handling and edge case tests:
   - EPUB generation
 
 - **`integration.test.js`** - Integration tests
-
   - Complete EPUB creation workflow
   - Multiple image formats
   - Large content handling
@@ -99,7 +97,6 @@ Error handling and edge case tests:
 ### Test Configuration
 
 - **`setup.js`** - Test environment setup
-
   - Mock browser APIs (crypto, DOMParser, XMLSerializer, Blob)
   - Global test constants
   - Environment compatibility helpers

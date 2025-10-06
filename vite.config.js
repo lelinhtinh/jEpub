@@ -83,6 +83,6 @@ export default defineConfig({
     },
 
     optimizeDeps: {
-        include: ['ejs', 'jszip', 'image-type', 'jsdom'],
+        include: ['ejs', 'jszip', 'image-type', '@xmldom/xmldom'],
     },
 });

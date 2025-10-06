@@ -9,8 +9,8 @@
     "dev": "node --watch index.js"
   },
   "dependencies": {
+    "ejs": "^3.1.10",
     "jepub": "file:../../",
-    "jszip": "^3.10.1",
-    "ejs": "^3.1.10"
+    "jszip": "^3.10.1"
   }
 }

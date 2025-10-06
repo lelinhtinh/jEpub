@@ -12,32 +12,6 @@ if (typeof globalThis.crypto === 'undefined') {
     };
 }
 
-// Mock DOMParser and XMLSerializer for browser environment
-if (typeof globalThis.DOMParser === 'undefined') {
-    globalThis.DOMParser = class {
-        parseFromString(html, _type) {
-            const doc = {
-                body: {
-                    innerHTML: html.replace(
-                        /<!doctype html><body>|<\/body>$/g,
-                        ''
-                    ),
-                    textContent: html.replace(/<[^>]+>/g, '').trim(),
-                },
-            };
-            return doc;
-        }
-    };
-}
-
-if (typeof globalThis.XMLSerializer === 'undefined') {
-    globalThis.XMLSerializer = class {
-        serializeToString(element) {
-            return element.innerHTML || '';
-        }
-    };
-}
-
 // Mock Blob constructor for testing
 if (typeof globalThis.Blob === 'undefined') {
     globalThis.Blob = class {
