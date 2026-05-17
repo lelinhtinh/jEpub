@@ -221,6 +221,45 @@ describe('jEpub Class', () => {
                 'Image data is not valid'
             );
         });
+
+        it('should default to an empty alt attribute when none are provided', () => {
+            const mockBlob = new Blob([TEST_CONSTANTS.MOCK_IMAGE_DATA], {
+                type: 'image/png',
+            });
+            epub.image(mockBlob, 'no-attrs');
+
+            expect(epub._Images['no-attrs'].attributes).toEqual({ alt: '' });
+        });
+
+        it('should store provided HTML attributes', () => {
+            const mockBlob = new Blob([TEST_CONSTANTS.MOCK_IMAGE_DATA], {
+                type: 'image/png',
+            });
+            epub.image(mockBlob, 'with-attrs', {
+                alt: 'My picture',
+                width: '320',
+                class: 'thumb',
+            });
+
+            expect(epub._Images['with-attrs'].attributes).toEqual({
+                alt: 'My picture',
+                width: '320',
+                class: 'thumb',
+            });
+        });
+
+        it('should add an empty alt when attributes are provided without alt', () => {
+            const mockBlob = new Blob([TEST_CONSTANTS.MOCK_IMAGE_DATA], {
+                type: 'image/png',
+            });
+            epub.image(mockBlob, 'no-alt', { width: '100', height: '200' });
+
+            expect(epub._Images['no-alt'].attributes).toEqual({
+                alt: '',
+                width: '100',
+                height: '200',
+            });
+        });
     });
 
     describe('notes method', () => {
@@ -286,6 +325,95 @@ describe('jEpub Class', () => {
             epub.add('Image Chapter', templateContent);
 
             expect(epub._Pages[0].title).toBe('Image Chapter');
+        });
+
+        it('should render image placeholder with an empty alt when no attributes provided', async () => {
+            const mockBlob = new Blob([TEST_CONSTANTS.MOCK_IMAGE_DATA], {
+                type: 'image/png',
+            });
+            epub.image(mockBlob, 'plain-img');
+            epub.add('Plain Image', '<p><%= image["plain-img"] %></p>');
+
+            const pageContent = await epub._Zip
+                .file('OEBPS/page-0.html')
+                .async('text');
+
+            expect(pageContent).toContain('src="assets/plain-img.png"');
+            expect(pageContent).toContain('alt=""');
+        });
+
+        it('should render image placeholder with stored HTML attributes', async () => {
+            const mockBlob = new Blob([TEST_CONSTANTS.MOCK_IMAGE_DATA], {
+                type: 'image/png',
+            });
+            epub.image(mockBlob, 'rich-img', {
+                alt: 'A nice picture',
+                width: '320',
+                height: '240',
+                class: 'thumb',
+            });
+            epub.add('Rich Image', '<p><%= image["rich-img"] %></p>');
+
+            const pageContent = await epub._Zip
+                .file('OEBPS/page-0.html')
+                .async('text');
+
+            expect(pageContent).toContain('src="assets/rich-img.png"');
+            expect(pageContent).toContain('alt="A nice picture"');
+            expect(pageContent).toContain('width="320"');
+            expect(pageContent).toContain('height="240"');
+            expect(pageContent).toContain('class="thumb"');
+        });
+
+        it('should add an empty alt when attributes are provided without alt', async () => {
+            const mockBlob = new Blob([TEST_CONSTANTS.MOCK_IMAGE_DATA], {
+                type: 'image/png',
+            });
+            epub.image(mockBlob, 'no-alt-img', { width: '100' });
+            epub.add('No Alt Image', '<p><%= image["no-alt-img"] %></p>');
+
+            const pageContent = await epub._Zip
+                .file('OEBPS/page-0.html')
+                .async('text');
+
+            expect(pageContent).toContain('alt=""');
+            expect(pageContent).toContain('width="100"');
+        });
+
+        it('should escape special characters in attribute values', async () => {
+            const mockBlob = new Blob([TEST_CONSTANTS.MOCK_IMAGE_DATA], {
+                type: 'image/png',
+            });
+            epub.image(mockBlob, 'esc-img', {
+                alt: 'A "quoted" & <tagged> caption',
+            });
+            epub.add('Escaped Image', '<p><%= image["esc-img"] %></p>');
+
+            const pageContent = await epub._Zip
+                .file('OEBPS/page-0.html')
+                .async('text');
+
+            expect(pageContent).toContain(
+                'alt="A &quot;quoted&quot; &amp; &lt;tagged&gt; caption"'
+            );
+        });
+
+        it('should ignore an attempt to override the src attribute', async () => {
+            const mockBlob = new Blob([TEST_CONSTANTS.MOCK_IMAGE_DATA], {
+                type: 'image/png',
+            });
+            epub.image(mockBlob, 'src-img', {
+                src: 'https://evil.example.com/x.png',
+                alt: 'safe',
+            });
+            epub.add('Src Image', '<p><%= image["src-img"] %></p>');
+
+            const pageContent = await epub._Zip
+                .file('OEBPS/page-0.html')
+                .async('text');
+
+            expect(pageContent).toContain('src="assets/src-img.png"');
+            expect(pageContent).not.toContain('evil.example.com');
         });
 
         it('should throw error for empty title', () => {

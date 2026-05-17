@@ -169,10 +169,11 @@ export default class jEpub {
      * Add an image to the book
      * @param {Blob | ArrayBuffer} data - Image data as Blob or ArrayBuffer
      * @param {string} name - Name for the image file
+     * @param {Object} [attributes={}] - Optional HTML attributes to render on the <img> tag
      * @returns {jEpub} - Returns this instance for method chaining
      * @throws {string} - Throws error if image data is invalid
      */
-    image(data, name) {
+    image(data, name, attributes = {}) {
         let ext, mime; // string - File extension and MIME type
         if (data instanceof Blob) {
             mime = data.type;
@@ -190,6 +191,7 @@ export default class jEpub {
         this._Images[name] = {
             type: mime,
             path: filePath,
+            attributes: Object.assign({ alt: '' }, attributes),
         };
         this._Zip.file(`OEBPS/${filePath}`, data);
         return this;
@@ -241,9 +243,21 @@ export default class jEpub {
             const images = this._Images;
             const fallback =
                 'data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=';
+            const escapeAttr = (value) => String(value)
+                    .replace(/&/g, '&amp;')
+                    .replace(/"/g, '&quot;')
+                    .replace(/</g, '&lt;');
+            const renderAttrs = (attrs) => Object.entries(attrs)
+                    .filter(([key]) => key !== 'src')
+                    .map(([key, value]) => ` ${key}="${escapeAttr(value)}"`)
+                    .join('');
             content = content.replace(/<%=[\s]*image\[['"]([\S]*?)['"]\][\s]*%>/g, (_, expr) => {
                 const img = images[expr.trim()];
-                return `<img src="${img ? img.path : fallback}" alt=""></img>`;
+                if (!img) {
+                    return `<img src="${fallback}" alt=""></img>`;
+                }
+                const attrs = Object.assign({ alt: '' }, img.attributes);
+                return `<img src="${escapeAttr(img.path)}"${renderAttrs(attrs)}></img>`;
             });
             content = utils.parseDOM(content);
         }
