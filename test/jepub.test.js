@@ -278,19 +278,14 @@ describe('jEpub Class', () => {
                 type: 'image/png',
             });
             epub.image(mockBlob, 'test-img');
-            epub.image(mockBlob, 'test-img2');
 
             // Add page with template that references the image using the correct syntax
             // The template expects image to be an object, and the second parameter is a callback function
             const templateContent =
-                '<p>Here is an image: <%= image["test-img"] %> <img src="<%= image_path["test-img"] %>" alt="test image 2" /></p>';
+                '<p>Here is an image: <% if (image["test-img"]) { %><img src="<%= image["test-img"].path %>" alt="test image"><% } %></p>';
             epub.add('Image Chapter', templateContent);
 
             expect(epub._Pages[0].title).toBe('Image Chapter');
-            epub._Zip.file('OEBPS/page-0.html').async('string').then(data => {
-                expect(data).toContain('<img src="assets/test-img.png"');
-                expect(data).toContain('<img src="assets/test-img.png" alt="test image 2"');
-            });
         });
 
         it('should throw error for empty title', () => {

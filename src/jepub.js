@@ -243,11 +243,7 @@ export default class jEpub {
                 'data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=';
             content = content.replace(/<%=[\s]*image\[['"]([\S]*?)['"]\][\s]*%>/g, (_, expr) => {
                 const img = images[expr.trim()];
-                return `<img src="${img ? img.path : fallback}" alt="" />`;
-            });
-            content = content.replace(/<%=[\s]*image_path\[['"]([\S]*?)['"]\][\s]*%>/g, (_, expr) => {
-                const img = images[expr.trim()];
-                return img ? img.path : fallback;
+                return `<img src="${img ? img.path : fallback}" alt=""></img>`;
             });
             content = utils.parseDOM(content);
         }
