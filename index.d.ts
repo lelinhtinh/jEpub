@@ -37,6 +37,8 @@ export interface jEpubImage {
     type: string;
     /** Path to image within EPUB */
     path: string;
+    /** HTML attributes to render on the <img> tag */
+    attributes: Record<string, string>;
 }
 
 export interface jEpubImages {
@@ -116,10 +118,11 @@ export default class jEpub {
      * Add an image to the book
      * @param data Image data as Blob or ArrayBuffer
      * @param name Image name (without extension)
+     * @param attributes - Optional HTML attributes to render on the <img> tag
      * @returns jEpub instance for method chaining
      * @throws Error if image data is invalid
      */
-    image(data: Blob | ArrayBuffer, name: string): this;
+    image(data: Blob | ArrayBuffer, name: string, attributes: Record<string, string>): this;
 
     /**
      * Add notes page to the book
