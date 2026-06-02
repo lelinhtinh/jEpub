@@ -3,6 +3,8 @@
  * Simple EPUB builder library for browsers
  */
 
+import type JSZip from "jszip";
+
 export interface jEpubInitDetails {
     /** Language code (e.g., 'en', 'fr', 'de', 'ja', 'ar' - supports 21+ languages) */
     i18n?: string;
