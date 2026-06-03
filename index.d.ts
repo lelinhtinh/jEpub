@@ -53,6 +53,13 @@ export type jEpubGenerateType =
     | 'uint8array'
     | 'nodebuffer';
 
+export type jEpubGenerateTypeMap = {
+    blob: Blob;
+    arraybuffer: ArrayBuffer;
+    uint8array: Uint8Array;
+    nodebuffer: Buffer;
+};
+
 export interface jEpubGenerateOptions {
     /** Output type */
     type?: jEpubGenerateType;
@@ -155,10 +162,12 @@ export default class jEpub {
      * @returns Promise that resolves to the generated EPUB data
      * @throws Error if browser doesn't support the specified type
      */
-    generate(
-        type?: jEpubGenerateType,
+    generate<
+        T extends jEpubGenerateType
+    >(
+        type?: T,
         onUpdate?: jEpubUpdateCallback
-    ): Promise<Blob | ArrayBuffer | Uint8Array | Buffer>;
+    ): Promise<jEpubGenerateTypeMap[T]>;
 }
 
 // Global type augmentation for UMD usage
