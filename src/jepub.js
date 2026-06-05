@@ -77,6 +77,7 @@ export default class jEpub {
                 publisher: this._Info.publisher,
                 description: utils.parseDOM(this._Info.description),
                 tags: this._Info.tags,
+                customMetadata: this._Info.customMetadata,
             })
         );
 
@@ -243,22 +244,27 @@ export default class jEpub {
             const images = this._Images;
             const fallback =
                 'data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=';
-            const escapeAttr = (value) => String(value)
+            const escapeAttr = (value) =>
+                String(value)
                     .replace(/&/g, '&amp;')
                     .replace(/"/g, '&quot;')
                     .replace(/</g, '&lt;');
-            const renderAttrs = (attrs) => Object.entries(attrs)
+            const renderAttrs = (attrs) =>
+                Object.entries(attrs)
                     .filter(([key]) => key !== 'src')
                     .map(([key, value]) => ` ${key}="${escapeAttr(value)}"`)
                     .join('');
-            content = content.replace(/<%=[\s]*image\[['"]([\S]*?)['"]\][\s]*%>/g, (_, expr) => {
-                const img = images[expr.trim()];
-                if (!img) {
-                    return `<img src="${fallback}" alt=""></img>`;
+            content = content.replace(
+                /<%=[\s]*image\[['"]([\S]*?)['"]\][\s]*%>/g,
+                (_, expr) => {
+                    const img = images[expr.trim()];
+                    if (!img) {
+                        return `<img src="${fallback}" alt=""></img>`;
+                    }
+                    const attrs = Object.assign({ alt: '' }, img.attributes);
+                    return `<img src="${escapeAttr(img.path)}"${renderAttrs(attrs)}></img>`;
                 }
-                const attrs = Object.assign({ alt: '' }, img.attributes);
-                return `<img src="${escapeAttr(img.path)}"${renderAttrs(attrs)}></img>`;
-            });
+            );
             content = utils.parseDOM(content);
         }
 
@@ -303,6 +309,7 @@ export default class jEpub {
                 description: utils.html2text(this._Info.description, true),
                 tags: this._Info.tags,
                 cover: this._Cover,
+                customMetadata: this._Info.customMetadata,
                 pages: this._Pages,
                 notes,
                 images: this._Images,
