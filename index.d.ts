@@ -38,6 +38,7 @@ export interface jEpubMetadataItem {
      * - `true`: Renders the item using the library's default built-in layout
      * - `false`: Completely skips rendering on the title page (only registers in book.opf)
      * - `Function`: A custom render callback to return a custom XHTML snippet
+     * @default false
      */
     renderInTitlePage?: boolean | jEpubMetadataRenderCallback;
 
@@ -86,7 +87,7 @@ export interface jEpubImage {
     /** Path to image within EPUB */
     path: string;
     /** HTML attributes to render on the <img> tag */
-    attributes: Record<string, string>;
+    attributes?: Record<string, string>;
 }
 
 export interface jEpubImages {
