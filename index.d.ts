@@ -5,6 +5,51 @@
 
 import type JSZip from "jszip";
 
+/**
+ * Custom attributes for an XML element
+ * Represented as key-value pairs where both keys and values are strings
+ */
+export interface jEpubMetadataAttributes {
+    [attrName: string]: string;
+}
+
+/**
+ * A callback function used to render a metadata item into a custom XHTML string for the title page
+ * @param item The current metadata item being processed
+ * @returns A valid XHTML string snippet to be injected into the template
+ */
+export type jEpubMetadataRenderCallback = (item: jEpubMetadataItem) => string;
+
+/**
+ * Represents a single metadata entry compliance with DCMI standards and customizable for EPUB generation.
+ */
+export interface jEpubMetadataItem {
+    /** The qualified name of the XML element (e.g., 'dc:contributor', 'dc:rights', 'meta') */
+    name: string;
+
+    /** The text content or value of the metadata element */
+    value: string;
+
+    /** Optional XML attributes associated with the metadata element (e.g., { 'opf:role': 'aut' }) */
+    attrs?: jEpubMetadataAttributes;
+
+    /**
+     * Defines whether or how the item should be rendered on the HTML title page
+     * - `true`: Renders the item using the library's default built-in layout
+     * - `false`: Completely skips rendering on the title page (only registers in book.opf)
+     * - `Function`: A custom render callback to return a custom XHTML snippet
+     * @default false
+     */
+    renderInTitlePage?: boolean | jEpubMetadataRenderCallback;
+
+    /**
+     * The human-readable display name used as a label on the title page
+     * Only applicable when `renderInTitlePage` is set to `true`
+     * If omitted, falls back to the capitalized element name (excluding prefix)
+     */
+    label?: string;
+}
+
 export interface jEpubInitDetails {
     /** Language code (e.g., 'en', 'fr', 'de', 'ja', 'ar' - supports 21+ languages) */
     i18n?: string;
@@ -18,6 +63,8 @@ export interface jEpubInitDetails {
     description?: string;
     /** Book tags/categories */
     tags?: string[];
+    /** Custom metadata */
+    customMetadata?: jEpubMetadataItem[];
 }
 
 export interface jEpubUuid {
@@ -40,7 +87,7 @@ export interface jEpubImage {
     /** Path to image within EPUB */
     path: string;
     /** HTML attributes to render on the <img> tag */
-    attributes: Record<string, string>;
+    attributes?: Record<string, string>;
 }
 
 export interface jEpubImages {

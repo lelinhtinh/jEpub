@@ -3,17 +3,17 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<%= data.i18n.code %>">
 
 <head>
-	<title><%= data.i18n.info %></title>
-	<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
+    <title><%= data.i18n.info %></title>
+    <meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
 </head>
 
 <body>
-	<div id="title-page">
-		<h1 class="title"><%= data.title %></h1>
-		<h2 class="subtitle"></h2>
-		<h3 class="author"><%= data.author %></h3>
-		<h4 class="publisher"><%= data.publisher %></h4>
-	</div>
+    <div id="title-page">
+        <h1 class="title"><%= data.title %></h1>
+        <h2 class="subtitle"></h2>
+        <h3 class="author"><%= data.author %></h3>
+        <h4 class="publisher"><%= data.publisher %></h4>
+    </div>
     <% if (Array.isArray(data.tags) && data.tags.length) { %>
         <div class="part-title-wrap">
             <% const tags = data.tags.join('</code>, <code>'); %>
@@ -23,6 +23,24 @@
     <% if (data.description) { %>
         <div class="ugc">
             <%- data.description %>
+        </div>
+    <% } %>
+    <% if (Array.isArray(data.customMetadata) && data.customMetadata.length) { %>
+        <div class="custom-metadata-container">
+            <% data.customMetadata.forEach(meta => { %>
+                <% if (typeof meta.renderInTitlePage === 'function') { %>
+                    <%- meta.renderInTitlePage(meta) %>
+                <% } else if (meta.renderInTitlePage === true && meta.value) { %>
+                    <div class="meta-row" data-meta-name="<%= meta.name %>">
+                        <span class="meta-label">
+                            <%= meta.label || meta.name.replace(/^[^:]+:/, '').replace(/^\w/, c => c.toUpperCase()) %>:
+                        </span>
+                        <span class="meta-value" <% if(meta.attrs && meta.attrs['xml:lang']) { %> xml:lang="<%= meta.attrs['xml:lang'] %>" <% } %>>
+                            <%= meta.value %>
+                        </span>
+                    </div>
+                <% } %>
+            <% }); %>
         </div>
     <% } %>
 </body>

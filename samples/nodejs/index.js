@@ -36,6 +36,30 @@ async function createAdvancedEpub() {
                 'javascript',
                 'sample',
             ],
+            customMetadata: [
+                {
+                    name: 'dc:created',
+                    value: new Date().toString(),
+                    renderInTitlePage: false,
+                },
+                {
+                    name: 'dc:creator',
+                    value: 'jEpub',
+                    renderInTitlePage: true,
+                },
+                {
+                    name: 'dc:audience',
+                    value: 'developer',
+                    label: 'Audience',
+                },
+                {
+                    name: 'dc:abstract',
+                    value: 'This EPUB provides a concise demonstration of the capabilities of jEpub.',
+                    renderInTitlePage(item) {
+                        return `<p><b>Abstract: </b>${item.value}</p>`;
+                    },
+                },
+            ],
         });
 
         console.log('Book initialized with comprehensive metadata');

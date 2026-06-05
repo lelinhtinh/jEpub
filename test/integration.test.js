@@ -11,6 +11,26 @@ const TEST_CONSTANTS = {
         description: 'A test book for unit testing',
         tags: ['test', 'unit-test'],
         i18n: 'en',
+        customMetadata: [
+            {
+                name: 'dc:rights',
+                value: '© 2026 Developer',
+                renderInTitlePage: true,
+                label: 'Copyright',
+            },
+            {
+                name: 'meta',
+                value: '2026-06-05',
+                attrs: { property: 'dcterms:modified' },
+                renderInTitlePage: false,
+            },
+            {
+                name: 'dc:contributor',
+                value: 'Alice',
+                renderInTitlePage: (item) =>
+                    `<div class="custom">${item.value}</div>`,
+            },
+        ],
     },
 };
 
@@ -31,6 +51,14 @@ describe('jEpub Integration Tests', () => {
                 description: 'A comprehensive test of all EPUB features',
                 tags: ['test', 'integration', 'epub'],
                 i18n: 'en',
+                customMetadata: [
+                    {
+                        name: 'dc:rights',
+                        value: '© 2026 Developer',
+                        renderInTitlePage: true,
+                        label: 'Copyright',
+                    },
+                ],
             });
 
             // Set custom date and UUID
@@ -200,6 +228,7 @@ describe('jEpub Integration Tests', () => {
             expect(opfContent).toContain('Test Publisher');
             expect(opfContent).toContain('2023-06-01T10:00:00.000Z');
             expect(opfContent).toContain('https://example.com/books/test-book');
+            expect(opfContent).toContain('© 2026 Developer');
 
             // Verify toc.ncx contains navigation
             const tocContent = await loadedZip.file('toc.ncx').async('text');
