@@ -28,6 +28,30 @@ async function createSampleEpub() {
             description:
                 'A sample EPUB book created with <b>jEpub</b> using ES modules in Node.js environment.',
             tags: ['sample', 'epub', 'javascript', 'es-modules', 'nodejs'],
+            customMetadata: [
+                {
+                    name: 'dc:created',
+                    value: new Date().toString(),
+                    renderInTitlePage: false,
+                },
+                {
+                    name: 'dc:creator',
+                    value: 'jEpub',
+                    renderInTitlePage: true,
+                },
+                {
+                    name: 'dc:audience',
+                    value: 'developer',
+                    label: 'Audience',
+                },
+                {
+                    name: 'dc:abstract',
+                    value: 'This EPUB provides a concise demonstration of the capabilities of jEpub.',
+                    renderInTitlePage(item) {
+                        return `<p><b>Abstract: </b>${item.value}</p>`;
+                    },
+                },
+            ],
         });
 
         console.log('✅ Book initialized with metadata');

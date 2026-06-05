@@ -261,9 +261,8 @@ jepub.init(bookDetails);</code></pre>
             <h2>Loaded Images</h2>
             <p>The following images were loaded and processed with type safety:</p>
 
-            ${
-                loadedImages.length > 0
-                    ? `
+            ${loadedImages.length > 0
+                ? `
                 ${loadedImages
                     .map(
                         (imageName) => `
@@ -275,7 +274,7 @@ jepub.init(bookDetails);</code></pre>
                     )
                     .join('')}
             `
-                    : `
+                : `
                 <p><em>No images were loaded for this example.</em></p>
             `
             }
@@ -400,6 +399,30 @@ class TypeScriptEpubGenerator {
                 'type-safety',
                 'javascript',
                 'tutorial',
+            ],
+            customMetadata: [
+                {
+                    name: 'dc:created',
+                    value: new Date().toString(),
+                    renderInTitlePage: false,
+                },
+                {
+                    name: 'dc:creator',
+                    value: 'jEpub',
+                    renderInTitlePage: true,
+                },
+                {
+                    name: 'dc:audience',
+                    value: 'developer',
+                    label: 'Audience',
+                },
+                {
+                    name: 'dc:abstract',
+                    value: 'This EPUB provides a concise demonstration of the capabilities of jEpub.',
+                    renderInTitlePage(item) {
+                        return `<p><b>Abstract: </b>${item.value}</p>`;
+                    },
+                },
             ],
         };
 
@@ -846,10 +869,10 @@ interface BookStatistics {
                 epub instanceof ArrayBuffer
                     ? epub.byteLength
                     : epub instanceof Uint8Array
-                      ? epub.length
-                      : 'length' in epub
-                        ? (epub as any).length
-                        : 0;
+                        ? epub.length
+                        : 'length' in epub
+                            ? (epub as any).length
+                            : 0;
 
             const stats = StatisticsCalculator.calculateBookStats(
                 this.chapters,

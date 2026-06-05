@@ -63,6 +63,14 @@
                 background: #ccc;
                 cursor: not-allowed;
             }
+            button.button-add-meta {
+                background: #eee;
+                color: black;
+                padding: 8px 18px;
+                font-size: 12px;
+                border: 1px solid #aaa;
+                border-radius: 2px;
+            }
             .progress {
                 margin-top: 20px;
                 padding: 10px;
@@ -97,6 +105,37 @@
                 background: #f8d7da;
                 color: #721c24;
                 border: 1px solid #f5c6cb;
+            }
+            .metadata-container {
+                display: flex;
+                flex-direction: column;
+                align-items: stretch;
+                gap: 10px;
+                margin-bottom: 10px;
+            }
+            .metadata-item {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                gap: 5px;
+                border: 1px solid #aaa;
+                border-radius: 5px;
+                padding: 16px;
+            }
+            .meta-property {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                gap: 5px;
+                width: 100%;
+            }
+            .meta-text {
+                flex-grow: 0;
+                flex-shrink: 0;
+            }
+            .meta-data {
+                flex-grow: 1;
+                flex-shrink: 1;
             }
         </style>
     </head>
@@ -154,6 +193,14 @@ A sample EPUB book created with <b>jEpub</b> library using UMD build in browser.
                 </div>
 
                 <div class="form-group">
+                    <label for="customMetadata">Custom Metadata:</label>
+                    <div class="metadata-container" id="customMetadataContainer"></div>
+                    <button type="button" class="button-add-meta" id="addCustomMetadata">
+                        Add Custom Metadata
+                    </button>
+                </div>
+
+                <div class="form-group">
                     <label for="coverImage">Cover Image:</label>
                     <input type="file" id="coverImage" accept="image/*" />
                 </div>
@@ -203,6 +250,12 @@ A sample EPUB book created with <b>jEpub</b> library using UMD build in browser.
                     addSampleChapter();
                 });
 
+            document
+                .getElementById('addCustomMetadata')
+                .addEventListener('click', function () {
+                    addCustomMetadata();
+                });
+
             function showStatus(message, type = 'success') {
                 const statusDiv = document.getElementById('status');
                 statusDiv.innerHTML = `<div class="status ${type}">${message}</div>`;
@@ -237,6 +290,15 @@ A sample EPUB book created with <b>jEpub</b> library using UMD build in browser.
                         .value.split(',')
                         .map((tag) => tag.trim())
                         .filter((tag) => tag.length > 0);
+                    const customMetadata = Array.from(
+                        document.getElementById('customMetadataContainer').children
+                    ).map((item) => ({
+                        name: item.querySelector('.name').value,
+                        value: item.querySelector('.value').value,
+                        attrs: JSON.parse(item.querySelector('.attrs').value || '{}'),
+                        label: item.querySelector('.label').value,
+                        renderInTitlePage: true,
+                    }));
 
                     // Initialize book details
                     jepub.init({
@@ -247,6 +309,7 @@ A sample EPUB book created with <b>jEpub</b> library using UMD build in browser.
                         description:
                             document.getElementById('description').value,
                         tags: tags,
+                        customMetadata: customMetadata,
                     });
 
                     updateProgress(20, 'Book initialized...');
@@ -350,6 +413,19 @@ A sample EPUB book created with <b>jEpub</b> library using UMD build in browser.
                     `📝 Chapter ${chapterCount} will be added when generating EPUB`,
                     'success'
                 );
+            }
+
+            function addCustomMetadata() {
+                const container = document.getElementById('customMetadataContainer');
+                const item = document.createElement('div');
+                item.classList.add('metadata-item');
+                item.innerHTML = `
+                    <div class="meta-property"><span class="meta-text">Name: </span><input class="meta-data name" value="dc:abstract" /></div>
+                    <div class="meta-property"><span class="meta-text">Value: </span><input class="meta-data value" value="A custom EPUB generated using jEub" /></div>
+                    <div class="meta-property"><span class="meta-text">Attributes (JSON): </span><input class="meta-data attrs" value="{}" /></div>
+                    <div class="meta-property"><span class="meta-text">Label: </span><input class="meta-data label" value="Abstract" /></div>
+                `;
+                container.appendChild(item);
             }
         </script>
     </body>
