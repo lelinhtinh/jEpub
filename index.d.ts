@@ -131,7 +131,7 @@ export default class jEpub {
      * @returns jEpub instance for method chaining
      * @throws Error if image data is invalid
      */
-    image(data: Blob | ArrayBuffer, name: string, attributes: Record<string, string>): this;
+    image(data: Blob | ArrayBuffer, name: string, attributes?: Record<string, string>): this;
 
     /**
      * Add notes page to the book
