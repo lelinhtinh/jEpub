@@ -11,6 +11,26 @@ const TEST_CONSTANTS = {
         description: 'A test book for unit testing',
         tags: ['test', 'unit-test'],
         i18n: 'en',
+        customMetadata: [
+            {
+                name: 'dc:rights',
+                value: '© 2026 Developer',
+                renderInTitlePage: true,
+                label: 'Copyright',
+            },
+            {
+                name: 'meta',
+                value: '2026-06-05',
+                attrs: { property: 'dcterms:modified' },
+                renderInTitlePage: false,
+            },
+            {
+                name: 'dc:contributor',
+                value: 'Alice',
+                renderInTitlePage: (item) =>
+                    `<div class="custom">${item.value}</div>`,
+            },
+        ],
     },
     MOCK_IMAGE_DATA: new Uint8Array([
         0xff, 0xd8, 0xff, 0xe0, 0x00, 0x10, 0x4a, 0x46, 0x49, 0x46, 0x00, 0x01,
@@ -48,6 +68,13 @@ describe('jEpub Class', () => {
             expect(epub._Info.author).toBe('Test Author');
             expect(epub._Info.publisher).toBe('Test Publisher');
             expect(epub._Info.i18n).toBe('en');
+            expect(epub._Info.customMetadata).toEqual(
+                TEST_CONSTANTS.SAMPLE_EPUB_CONFIG.customMetadata
+            );
+            expect(epub._Info.customMetadata.length).toBe(3);
+            expect(typeof epub._Info.customMetadata[2].renderInTitlePage).toBe(
+                'function'
+            );
             expect(epub._Uuid.scheme).toBe('uuid');
             expect(epub._Date).toBeTruthy();
             expect(epub._Zip).toBeInstanceOf(JSZip);
@@ -79,6 +106,7 @@ describe('jEpub Class', () => {
             expect(epub._Info.publisher).toBe('undefined');
             expect(epub._Info.description).toBe('');
             expect(epub._Info.tags).toEqual([]);
+            expect(epub._Info.customMetadata).toEqual({});
         });
     });
 
