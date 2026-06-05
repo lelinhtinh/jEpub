@@ -50,6 +50,7 @@ export default class jEpub {
                 publisher: 'undefined',
                 description: '',
                 tags: [],
+                customMetadata: {},
             },
             details
         );
