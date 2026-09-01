@@ -33,9 +33,9 @@
             <item id="notes" href="OEBPS/notes.html" media-type="application/xhtml+xml" />
         <% } %>
         <item id="table-of-contents" href="OEBPS/table-of-contents.html" media-type="application/xhtml+xml" />
-        <% data.pages.forEach((page, index) => { %>
+        <% for (let index = 0; index < data.pages; index++) { %>
             <item id="page-<%= index %>" href="OEBPS/page-<%= index %>.html" media-type="application/xhtml+xml" />
-        <% }); %>
+        <% } %>
         <% if (data.cover) { %>
             <item id="cover-image" href="<%= data.cover.path %>" media-type="<%= data.cover.type %>" />
         <% } %>
@@ -51,9 +51,9 @@
         <% } %>
         <itemref idref="title-page" linear="yes" />
         <itemref idref="table-of-contents" linear="yes" />
-        <% data.pages.forEach((page, index) => { %>
+        <% for (let index = 0; index < data.pages; index++) { %>
             <itemref idref="page-<%= index %>" linear="yes" />
-        <% }); %>
+        <% } %>
         <% if (data.notes) { %>
             <itemref idref="notes" linear="yes" />
         <% } %>

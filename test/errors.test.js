@@ -250,7 +250,7 @@ describe('jEpub Error Handling', () => {
                 ).not.toThrow();
             }
 
-            expect(epub._Pages.length).toBe(1000);
+            expect(epub._PageCount).toBe(1000);
         });
 
         it('should handle large image data', () => {

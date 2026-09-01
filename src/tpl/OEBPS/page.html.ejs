@@ -3,27 +3,29 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="<%= data.i18n.code %>">
 
 <head>
-	<title><%= data.title %></title>
+	<title><%= data.sections[0].title %></title>
 	<meta http-equiv="Content-Type" content="application/xhtml+xml; charset=utf-8" />
 </head>
 
 <body>
+    <% data.sections.forEach(section => { %>
 	<div class="chapter type-1">
 		<div class="chapter-title-wrap">
-			<h2 class="chapter-title"><%= data.title %></h2>
+			<h2 class="chapter-title" id="jepub-chapter-<%= section.index %>"><%= section.title %></h2>
 		</div>
-        <% if (data.content) { %>
+        <% if (section.content) { %>
             <div class="ugc chapter-ugc">
-                <% if (Array.isArray(data.content)) { %>
-                    <% data.content.forEach(item => { %>
+                <% if (Array.isArray(section.content)) { %>
+                    <% section.content.forEach(item => { %>
                         <p class="indent"><%= item %></p>
                     <% }); %>
                 <% } else { %>
-                    <%- data.content %>
+                    <%- section.content %>
                 <% } %>
             </div>
         <% } %>
 	</div>
+    <% }); %>
 </body>
 
 </html>

@@ -181,7 +181,7 @@ describe('jEpub Advanced Features', () => {
                 );
             }
 
-            expect(epub._Pages.length).toBe(50);
+            expect(epub._PageCount).toBe(50);
         });
 
         it('should handle pages with very long content', () => {
@@ -286,11 +286,11 @@ describe('jEpub Advanced Features', () => {
                 epub.add('Main Chapter 2', '<p>Content</p>', 0)
             ).not.toThrow();
 
-            expect(epub._Pages.length).toBe(4);
-            expect(epub._Pages[0].level).toBe(0);
-            expect(epub._Pages[1].level).toBe(1);
-            expect(epub._Pages[2].level).toBe(1);
-            expect(epub._Pages[3].level).toBe(0);
+            expect(epub._PageCount).toBe(4);
+            expect(epub._Toc[0].level).toBe(0);
+            expect(epub._Toc[1].level).toBe(1);
+            expect(epub._Toc[2].level).toBe(1);
+            expect(epub._Toc[3].level).toBe(0);
         });
 
         it('should handle deep nesting levels', () => {
@@ -301,9 +301,9 @@ describe('jEpub Advanced Features', () => {
             epub.add('Level 2', '<p>Content</p>', 2);
             epub.add('Level 3', '<p>Content</p>', 3);
 
-            expect(epub._Pages.length).toBe(4);
+            expect(epub._PageCount).toBe(4);
             for (let i = 0; i < 4; i++) {
-                expect(epub._Pages[i].level).toBe(i);
+                expect(epub._Toc[i].level).toBe(i);
             }
         });
     });

@@ -194,8 +194,15 @@ A sample EPUB book created with <b>jEpub</b> library using UMD build in browser.
 
                 <div class="form-group">
                     <label for="customMetadata">Custom Metadata:</label>
-                    <div class="metadata-container" id="customMetadataContainer"></div>
-                    <button type="button" class="button-add-meta" id="addCustomMetadata">
+                    <div
+                        class="metadata-container"
+                        id="customMetadataContainer"
+                    ></div>
+                    <button
+                        type="button"
+                        class="button-add-meta"
+                        id="addCustomMetadata"
+                    >
                         Add Custom Metadata
                     </button>
                 </div>
@@ -291,11 +298,14 @@ A sample EPUB book created with <b>jEpub</b> library using UMD build in browser.
                         .map((tag) => tag.trim())
                         .filter((tag) => tag.length > 0);
                     const customMetadata = Array.from(
-                        document.getElementById('customMetadataContainer').children
+                        document.getElementById('customMetadataContainer')
+                            .children
                     ).map((item) => ({
                         name: item.querySelector('.name').value,
                         value: item.querySelector('.value').value,
-                        attrs: JSON.parse(item.querySelector('.attrs').value || '{}'),
+                        attrs: JSON.parse(
+                            item.querySelector('.attrs').value || '{}'
+                        ),
                         label: item.querySelector('.label').value,
                         renderInTitlePage: true,
                     }));
@@ -416,7 +426,9 @@ A sample EPUB book created with <b>jEpub</b> library using UMD build in browser.
             }
 
             function addCustomMetadata() {
-                const container = document.getElementById('customMetadataContainer');
+                const container = document.getElementById(
+                    'customMetadataContainer'
+                );
                 const item = document.createElement('div');
                 item.classList.add('metadata-item');
                 item.innerHTML = `

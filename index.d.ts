@@ -3,7 +3,7 @@
  * Simple EPUB builder library for browsers
  */
 
-import type JSZip from "jszip";
+import type JSZip from 'jszip';
 
 /**
  * Custom attributes for an XML element
@@ -65,6 +65,18 @@ export interface jEpubInitDetails {
     tags?: string[];
     /** Custom metadata */
     customMetadata?: jEpubMetadataItem[];
+}
+
+export interface jEpubChapter {
+    /** Chapter title (rendered as the heading) */
+    title: string;
+    /**
+     * Chapter content (single HTML string, supports image placeholders).
+     * Omitted, null, or empty content renders a title-only chapter.
+     */
+    content?: string | null;
+    /** Hierarchy level of the chapter (defaults to 0) */
+    level?: number;
 }
 
 export interface jEpubUuid {
@@ -178,7 +190,11 @@ export default class jEpub {
      * @returns jEpub instance for method chaining
      * @throws Error if image data is invalid
      */
-    image(data: Blob | ArrayBuffer, name: string, attributes?: Record<string, string>): this;
+    image(
+        data: Blob | ArrayBuffer,
+        name: string,
+        attributes?: Record<string, string>
+    ): this;
 
     /**
      * Add notes page to the book
@@ -203,15 +219,23 @@ export default class jEpub {
     ): this;
 
     /**
+     * Add a single page containing multiple chapters. Each chapter becomes its
+     * own navigation entry pointing to an anchor on its heading inside the
+     * shared page file.
+     * @param chapters Array of chapters ({ title, content, level }) to render into one page
+     * @returns jEpub instance for method chaining
+     * @throws Error if the input or any chapter is invalid
+     */
+    addPage(chapters: jEpubChapter[]): this;
+
+    /**
      * Generate the EPUB file
      * @param type Output format type
      * @param onUpdate Optional callback for progress updates
      * @returns Promise that resolves to the generated EPUB data
      * @throws Error if browser doesn't support the specified type
      */
-    generate<
-        T extends jEpubGenerateType
-    >(
+    generate<T extends jEpubGenerateType>(
         type?: T,
         onUpdate?: jEpubUpdateCallback
     ): Promise<jEpubGenerateTypeMap[T]>;

@@ -1,10 +1,11 @@
 import lodash from 'lodash';
-import minifyXML from "minify-xml";
+import minifyXML from 'minify-xml';
 const { template: lodashTemplate } = lodash;
 
 const ESCAPE_FALLBACK = `function escapeFallback(s){var m={'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'};return s==null?'':String(s).replace(/[&<>"']/g,function(c){return m[c];});}`;
 const XML_PROLOG_REGEX = /(<\?xml\s*version="1.0"\s*encoding="UTF-8"\s*\?>)\s*/;
-const XML_DOCTYPE_REGEX = /(<!DOCTYPE\s*html\s*PUBLIC\s*"-\/\/W3C\/\/DTD\s*XHTML\s*1\.1\/\/EN"\s*"http:\/\/www\.w3\.org\/TR\/xhtml11\/DTD\/xhtml11\.dtd">)\s*/;
+const XML_DOCTYPE_REGEX =
+    /(<!DOCTYPE\s*html\s*PUBLIC\s*"-\/\/W3C\/\/DTD\s*XHTML\s*1\.1\/\/EN"\s*"http:\/\/www\.w3\.org\/TR\/xhtml11\/DTD\/xhtml11\.dtd">)\s*/;
 
 export function ejsPrecompile() {
     return {
@@ -16,9 +17,9 @@ export function ejsPrecompile() {
             }
 
             if (
-                (filename.endsWith('.html.ejs')) ||
-                (filename.endsWith('.opf.ejs')) ||
-                (filename.endsWith('.ncx.ejs'))
+                filename.endsWith('.html.ejs') ||
+                filename.endsWith('.opf.ejs') ||
+                filename.endsWith('.ncx.ejs')
             ) {
                 template = minifyXML(template, {
                     collapseEmptyElements: false,
@@ -44,8 +45,10 @@ export function ejsPrecompile() {
             });
 
             const functionSource = compiled.source;
-            const exportedFunctionSource = functionSource
-                .replace('_.escape', 'escapeFallback');
+            const exportedFunctionSource = functionSource.replace(
+                '_.escape',
+                'escapeFallback'
+            );
 
             let code = `export default ${exportedFunctionSource}`;
             if (functionSource.includes('_.escape')) {

@@ -24,7 +24,8 @@ export default class jEpub {
         this._Date = null; // string | null - ISO date string
         this._Cover = null; // Object | null - Cover image information
 
-        this._Pages = []; // Array<string> - Array of page titles
+        this._PageCount = 0; // number - Count of physical page files (drives manifest/spine)
+        this._Toc = []; // Array<Object> - Array of chapters/navigation entries (drives NCX + TOC)
         this._Images = []; // Array<Object> - Array of image objects with type and path
 
         this._Zip = {}; // JSZip - ZIP file handler
@@ -221,6 +222,71 @@ export default class jEpub {
     }
 
     /**
+     * Process a single HTML content string: substitute image placeholders and
+     * convert HTML to XHTML. Mirrors the pipeline used when adding pages.
+     * @param {string} content - HTML content string
+     * @returns {string} - Processed XHTML content
+     */
+    _processContent(content) {
+        const images = this._Images;
+        const fallback =
+            'data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=';
+        const escapeAttr = (value) =>
+            String(value)
+                .replace(/&/g, '&amp;')
+                .replace(/"/g, '&quot;')
+                .replace(/</g, '&lt;');
+        const renderAttrs = (attrs) =>
+            Object.entries(attrs)
+                .filter(([key]) => key !== 'src')
+                .map(([key, value]) => ` ${key}="${escapeAttr(value)}"`)
+                .join('');
+        content = content.replace(
+            /<%=[\s]*image\[['"]([\S]*?)['"]\][\s]*%>/g,
+            (_, expr) => {
+                const img = images[expr.trim()];
+                if (!img) {
+                    return `<img src="${fallback}" alt=""></img>`;
+                }
+                const attrs = Object.assign({ alt: '' }, img.attributes);
+                return `<img src="${escapeAttr(img.path)}"${renderAttrs(attrs)}></img>`;
+            }
+        );
+        return utils.parseDOM(content);
+    }
+
+    /**
+     * Validate a chapter's hierarchy level against the previous level.
+     * @param {number} level - Level to validate
+     * @param {number} previousLevel - Level of the previous chapter (or -1 if none)
+     * @throws {string} - Throws error if level is invalid
+     */
+    _validateLevel(level, previousLevel) {
+        if (typeof level !== 'number' || isNaN(level) || level < 0) {
+            throw 'Level must be a non-negative number';
+        }
+        if (previousLevel >= 0 && level > previousLevel + 1) {
+            throw `Invalid TOC hierarchy: Level can only increase by 1 (from ${previousLevel} to ${previousLevel + 1})`;
+        }
+    }
+
+    /**
+     * Register a chapter (navigation entry) pointing to a heading inside a page file.
+     * @param {string} title - Title of the chapter
+     * @param {number} level - Hierarchy level of the chapter
+     * @param {number} fileIndex - Index of the physical page file the chapter lives in
+     * @param {number} chapterIndex - Global chapter index (drives the heading/nav ids)
+     */
+    _pushToc(title, level, fileIndex, chapterIndex) {
+        this._Toc.push({
+            title,
+            level,
+            href: `page-${fileIndex}.html#jepub-chapter-${chapterIndex}`,
+            navId: `jepub-toc-chapter-${chapterIndex}`,
+        });
+    }
+
+    /**
      * Add a page to the book
      * @param {string} title - Title of the page
      * @param {string | Array | null} content - HTML content for the page or array of content
@@ -233,54 +299,88 @@ export default class jEpub {
             throw 'Title is empty';
         }
 
-        if (typeof level !== 'number' || isNaN(level) || level < 0) {
-            throw 'Level must be a non-negative number';
-        }
-        const lastPage = this._Pages[this._Pages.length - 1];
-        if (lastPage && level > lastPage.level + 1) {
-            throw `Invalid TOC hierarchy: Level can only increase by 1 (from ${lastPage.level} to ${lastPage.level + 1})`;
-        }
+        const lastChapter = this._Toc[this._Toc.length - 1];
+        this._validateLevel(level, lastChapter ? lastChapter.level : -1);
 
         if (content && !Array.isArray(content)) {
-            const images = this._Images;
-            const fallback =
-                'data:image/gif;base64,R0lGODlhAQABAIAAAAUEBAAAACwAAAAAAQABAAACAkQBADs=';
-            const escapeAttr = (value) =>
-                String(value)
-                    .replace(/&/g, '&amp;')
-                    .replace(/"/g, '&quot;')
-                    .replace(/</g, '&lt;');
-            const renderAttrs = (attrs) =>
-                Object.entries(attrs)
-                    .filter(([key]) => key !== 'src')
-                    .map(([key, value]) => ` ${key}="${escapeAttr(value)}"`)
-                    .join('');
-            content = content.replace(
-                /<%=[\s]*image\[['"]([\S]*?)['"]\][\s]*%>/g,
-                (_, expr) => {
-                    const img = images[expr.trim()];
-                    if (!img) {
-                        return `<img src="${fallback}" alt=""></img>`;
-                    }
-                    const attrs = Object.assign({ alt: '' }, img.attributes);
-                    return `<img src="${escapeAttr(img.path)}"${renderAttrs(attrs)}></img>`;
-                }
-            );
-            content = utils.parseDOM(content);
+            content = this._processContent(content);
         }
 
-        const pageId = this._Pages.length;
+        const fileIndex = this._PageCount;
+        const chapterIndex = this._Toc.length;
         this._Zip.file(
-            `OEBPS/page-${pageId}.html`,
+            `OEBPS/page-${fileIndex}.html`,
             renderPage({
                 i18n: this._I18n,
-                title,
-                content,
+                sections: [{ title, content, index: chapterIndex }],
             })
         );
-        this._Pages.push({
-            title,
-            level,
+        this._PageCount++;
+        this._pushToc(title, level, fileIndex, chapterIndex);
+        return this;
+    }
+
+    /**
+     * Add a single page containing multiple chapters. Each chapter becomes its
+     * own navigation entry pointing to an anchor on the chapter's heading inside
+     * the shared page file.
+     * @param {Array<Object>} chapters - Array of { title, content, level } objects.
+     *   A chapter's content may be omitted (null/undefined) or empty, in which
+     *   case the chapter renders with its title only.
+     * @returns {jEpub} - Returns this instance for method chaining
+     * @throws {string} - Throws error if input or any chapter is invalid
+     */
+    addPage(chapters) {
+        if (!Array.isArray(chapters)) {
+            throw 'Chapters must be an array';
+        }
+        if (chapters.length === 0) {
+            throw 'Chapters is empty';
+        }
+
+        const fileIndex = this._PageCount;
+        const base = this._Toc.length;
+        const lastChapter = this._Toc[this._Toc.length - 1];
+        let previousLevel = lastChapter ? lastChapter.level : -1;
+
+        const sections = chapters.map((chapter, k) => {
+            if (!utils.isObject(chapter)) {
+                throw 'Chapter must be an object';
+            }
+            const { title, content = null, level = 0 } = chapter;
+            if (typeof title !== 'string' || utils.isEmpty(title)) {
+                throw 'Title is empty';
+            }
+            if (content != null && typeof content !== 'string') {
+                throw 'Content must be a string or null';
+            }
+            this._validateLevel(level, previousLevel);
+            previousLevel = level;
+            return {
+                title,
+                level,
+                content: utils.isEmpty(content)
+                    ? ''
+                    : this._processContent(content),
+                index: base + k,
+            };
+        });
+
+        this._Zip.file(
+            `OEBPS/page-${fileIndex}.html`,
+            renderPage({
+                i18n: this._I18n,
+                sections,
+            })
+        );
+        this._PageCount++;
+        sections.forEach((section) => {
+            this._pushToc(
+                section.title,
+                section.level,
+                fileIndex,
+                section.index
+            );
         });
         return this;
     }
@@ -311,7 +411,7 @@ export default class jEpub {
                 tags: this._Info.tags,
                 cover: this._Cover,
                 customMetadata: this._Info.customMetadata,
-                pages: this._Pages,
+                pages: this._PageCount,
                 notes,
                 images: this._Images,
             })
@@ -321,7 +421,7 @@ export default class jEpub {
             'OEBPS/table-of-contents.html',
             renderTocInBook({
                 i18n: this._I18n,
-                pages: this._Pages,
+                pages: this._Toc,
             })
         );
 
@@ -332,7 +432,7 @@ export default class jEpub {
                 uuid: this._Uuid,
                 title: this._Info.title,
                 author: this._Info.author,
-                pages: this._Pages,
+                pages: this._Toc,
                 notes,
             })
         );

@@ -53,8 +53,8 @@ For ES modules:
 
 jEpub requires [JSZip](https://github.com/Stuk/jszip)
 
-⚠️ **Important**: Starting from v2+, JSZip are **not bundled** with
-jEpub. You need to include them separately.
+⚠️ **Important**: Starting from v2+, JSZip are **not bundled** with jEpub. You
+need to include them separately.
 
 ### For UMD builds (browser usage)
 
@@ -129,6 +129,14 @@ const jepub = new jEpub();
 Initialize the EPUB with book details or existing JSZip instance.
 
 ```typescript
+interface jEpubMetadataItem {
+  name: string; // Qualified XML element name (e.g. 'dc:contributor', 'meta')
+  value: string; // Text content of the element
+  attrs?: Record<string, string>; // Optional XML attributes (e.g. { 'opf:role': 'aut' })
+  renderInTitlePage?: boolean | ((item: jEpubMetadataItem) => string); // Render on title page (default: false)
+  label?: string; // Display label on the title page (when renderInTitlePage is true)
+}
+
 interface jEpubInitDetails {
   i18n?: string; // Language code (e.g., 'en', 'fr', 'de', 'ja', 'ar' - supports 21+ languages)
   title?: string; // Book title
@@ -136,6 +144,7 @@ interface jEpubInitDetails {
   publisher?: string; // Book publisher
   description?: string; // Book description (supports HTML)
   tags?: string[]; // Book tags/categories
+  customMetadata?: jEpubMetadataItem[]; // Custom DCMI metadata entries
 }
 
 jepub.init({
@@ -145,6 +154,9 @@ jepub.init({
   publisher: 'Book publisher',
   description: '<b>Book</b> description',
   tags: ['epub', 'tag'],
+  customMetadata: [
+    { name: 'dc:contributor', value: 'Jane Doe', attrs: { 'opf:role': 'edt' } },
+  ],
 });
 ```
 
@@ -184,14 +196,18 @@ const arrayBuffer = await response.arrayBuffer();
 jepub.cover(arrayBuffer);
 ```
 
-#### `image(data: Blob | ArrayBuffer, name: string): this`
+#### `image(data: Blob | ArrayBuffer, name: string, attributes?: Record<string, string>): this`
 
-Add an image to the book.
+Add an image to the book. Optionally pass `attributes` to render additional HTML
+attributes (e.g. `alt`, `width`, `class`) onto the `<img>` tag.
 
 ```typescript
 const response = await fetch('image.jpg');
 const arrayBuffer = await response.arrayBuffer();
 jepub.image(arrayBuffer, 'myImage');
+
+// With custom attributes
+jepub.image(arrayBuffer, 'myImage', { alt: 'A description', width: '480' });
 ```
 
 Use in content: `<%= image['myImage'] %>`
@@ -206,7 +222,7 @@ jepub.notes('<p>These are my notes...</p>');
 
 #### `add(title: string, content?: string | string[] | null, level?: number): this`
 
-Add a page/chapter to the book.
+Add a page and chapter to the book.
 
 ```typescript
 // HTML content
@@ -220,6 +236,26 @@ jepub.add('Chapter 3', ['Line 1', 'Line 2', 'Line 3']);
 
 // With deep level
 jepub.add('Chapter 3.1', '<p>Content...</p>', 1);
+```
+
+#### `addPage(chapters: Array<{ title: string; content?: string | null; level?: number }>): this`
+
+Add **multiple chapters** to a single page to the book. A chapter's `content` is
+optional — if it is omitted, `null`, or empty, the chapter renders with its
+title only.
+
+```typescript
+// One page, four navigable chapters
+jepub.addPage([
+  // HTML content
+  { title: 'Section 1', content: '<p>Content...</p>' },
+  // With deep level
+  { title: 'Section 1.1', content: '<p>Content...</p>', level: 1 },
+  // With images
+  { title: 'Section 2', content: '<p>Image: <%= image["myImage"] %></p>' },
+  // Title-only chapter (no content)
+  { title: 'Section 3' },
+]);
 ```
 
 #### `generate(type?: jEpubGenerateType, onUpdate?: jEpubUpdateCallback): Promise<Blob | ArrayBuffer | Uint8Array | Buffer>`

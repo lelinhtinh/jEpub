@@ -150,7 +150,7 @@ describe('jEpub TOC Structure Tests', () => {
             // Count the number of opening and closing navPoint tags for content pages
             // The first two and last navPoints are for title page, TOC and possibly notes
             const contentNavPointOpenCount = (
-                tocNcx.match(/<navPoint id="page-\d+"/g) || []
+                tocNcx.match(/<navPoint id="jepub-toc-chapter-\d+"/g) || []
             ).length;
 
             // Count closing navPoints
@@ -178,7 +178,7 @@ describe('jEpub TOC Structure Tests', () => {
 
             // Count the number of opening and closing navPoint tags
             const contentNavPointOpenCount = (
-                tocNcx.match(/<navPoint id="page-\d+"/g) || []
+                tocNcx.match(/<navPoint id="jepub-toc-chapter-\d+"/g) || []
             ).length;
             const navPointCloseCount = (tocNcx.match(/<\/navPoint>/g) || [])
                 .length;
@@ -206,7 +206,7 @@ describe('jEpub TOC Structure Tests', () => {
 
             // Count the number of opening and closing navPoint tags
             const contentNavPointOpenCount = (
-                tocNcx.match(/<navPoint id="page-\d+"/g) || []
+                tocNcx.match(/<navPoint id="jepub-toc-chapter-\d+"/g) || []
             ).length;
             const navPointCloseCount = (tocNcx.match(/<\/navPoint>/g) || [])
                 .length;
@@ -234,7 +234,7 @@ describe('jEpub TOC Structure Tests', () => {
 
             // Count the number of opening and closing navPoint tags
             const contentNavPointOpenCount = (
-                tocNcx.match(/<navPoint id="page-\d+"/g) || []
+                tocNcx.match(/<navPoint id="jepub-toc-chapter-\d+"/g) || []
             ).length;
             const navPointCloseCount = (tocNcx.match(/<\/navPoint>/g) || [])
                 .length;

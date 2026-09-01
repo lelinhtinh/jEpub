@@ -31,17 +31,17 @@
 			<content src="OEBPS/table-of-contents.html" />
 		</navPoint>
         <% let currentLevel = -1; %>
-        <% data.pages.forEach(({title,level}, index) => { %>
+        <% data.pages.forEach(({title,level,href,navId}, index) => { %>
             <% if (level <= currentLevel) { %>
                 <% for (let i = currentLevel; i >= level; i--) { %>
                     </navPoint>
                 <% } %>
             <% } %>
-            <navPoint id="page-<%= index %>" playOrder="<%= (index + 3) %>">
+            <navPoint id="<%= navId %>" playOrder="<%= (index + 3) %>">
                 <navLabel>
                     <text><%= title %></text>
                 </navLabel>
-                <content src="OEBPS/page-<%= index %>.html" />
+                <content src="OEBPS/<%= href %>" />
             <% currentLevel = level; %>
         <% }); %>
         <% if (currentLevel >= 0) { %>
